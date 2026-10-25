@@ -16,10 +16,21 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Comprehensive Windows upstream build guide `docs/BUILDING_UPSTREAM.md` (Phase 0 Task 0.3).
 - Format inventory tools `tools/export_inventory.ps1` and `tools/format_inventory.py` discovering 831 formats (Phase 0 Task 0.7).
 - Generated format tracker `docs/10_FORMAT_TRACKER.md` with 831 format records.
+- ADR-004 decision record: subprocess JSON-lines helper bridge over `pythonnet` (`DECISIONS.md`).
+- C# helper executable bridge `garex-bridge.exe` referencing upstream GameRes & ArcFormats (`bridge/Program.cs`).
+- Python core models and typed exceptions (`src/garex/models.py`, `src/garex/errors.py`).
+- IPC bridge client with process lifecycle management (`src/garex/backends/bridge.py`).
+- Router architecture supporting auto fallback between native and bridge backends (`src/garex/backends/router.py`).
+- Public API `open_archive`, `Archive`, and `supported_formats` (`src/garex/api.py`).
+- CLI tool `garex list`, `garex formats`, and `garex extract` (`src/garex/cli.py`).
+- Path safety and directory traversal / Zip-Slip sanitization (`src/garex/security.py`).
+- Archive extraction engine supporting single entry and bulk extraction with progress tracking (`Archive.extract`, `Archive.extract_all`).
+- Comprehensive unit and integration test suite with 21 tests passing at 100% pass rate (`tests/`).
 
 ### Changed
 - Updated `vendor/README.md` recording pinned commit details.
 - Updated `docs/06_FORMAT_PORTING_GUIDE.md` integrating reverse-engineering and TDD skills into the format porting steps.
 - Updated `reference/GARBRO_REPO_MAP.md` filling all verified repository facts and answering architectural questions (Phase 0 Task 0.5).
 - Updated `docs/02_ARCHITECTURE.md` with answers regarding format discovery (MEF), encryption/scheme storage (`Formats.dat`), WPF dependencies, and archive sizes (Phase 0 Task 0.6, 0.8).
-- Updated `docs/04_TASKS.md` and `PROGRESS.md` reflecting completed status for tasks 0.1 through 0.8.
+- Updated `docs/04_TASKS.md` and `PROGRESS.md` reflecting completed status for Phase 0, Phase 1, and Phase 2.
+

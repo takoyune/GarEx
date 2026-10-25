@@ -9,7 +9,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "garex"
-version = "0.0.0"
+version = "0.1.0"
 description = "Python library for browsing, extracting, converting and repacking visual novel game resources (port of GARbro)."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -21,3 +21,10 @@ garex = "garex.cli:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/garex"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/garex/_bridge" = "garex/_bridge"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

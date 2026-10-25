@@ -17,11 +17,21 @@ Cross-platform is a later goal and depends on native ports.
 
 ## ADR-003: Package name `garex`, English-only docs (DECIDED by owner)
 
-## ADR-004: Bridge mechanism (OPEN - agent must decide in Phase 1 after a spike)
-Options: (a) helper executable `garex-bridge.exe` called via subprocess with a JSON-lines protocol;
-(b) `pythonnet` loading the .NET assemblies in-process.
-Default recommendation: (a) for robustness (no dependency on pythonnet/Python version matrix,
-crash isolation). Evaluate (b) only if (a) is too slow for large archives. Record result here.
+## ADR-004: Bridge mechanism (DECIDED 2026-10-25)
+- **Context**: Need to interface Python with compiled C# GARbro assemblies (`GameRes.dll`, `ArcFormats.dll`) for the hybrid backend strategy.
+- **Options considered**:
+  - (a) Helper executable `garex-bridge.exe` called via subprocess over JSON-lines stdio protocol.
+  - (b) `pythonnet` loading assemblies in-process inside the Python runtime.
+- **Empirical Spike Benchmark Results (`tools/spike_adr004.py`)**:
+  - Subprocess cold start & format enumeration: **0.58s** (warm 0.55s).
+  - Pythonnet CLR bootstrap & format enumeration: **1.13s**.
+  - Crash safety: Subprocess isolates corrupt archive panics, unsafe block faults, and SEH access violations to the child process, protecting the host Python process.
+  - Dependency footprint: Subprocess requires zero pip C-dependencies (`dependencies = []`), fully supporting any Python version (3.10 through 3.14+).
+- **Decision**: Choose **(a) Helper executable `garex-bridge.exe` via subprocess with JSON-lines protocol**.
+- **Consequences**:
+  - Bundled inside wheel (`src/garex/_bridge/`).
+  - No fragile `pythonnet` C-extension compilation or Python version locking.
+  - Bridge protocol provides clean timeout handling, cancellation, and mapped typed exceptions.
 
 <!-- Template:
 

@@ -1,8 +1,36 @@
-"""WHAT THIS MUST BECOME
-Package entry point. Exposes the public API (open_archive, convert_image, convert_audio, create_archive, supported_formats), __version__, and nothing else. (Phase 1, task 1.4)
+"""garex: Python library for browsing, extracting, converting, and repacking visual novel game resources."""
 
-MUST NOT: contain logic; import heavy modules at import time; expose backend internals.
+from __future__ import annotations
 
-Status: PLACEHOLDER. Replace this block with a normal module docstring once implemented.
-Docs: see docs/02_ARCHITECTURE.md and docs/04_TASKS.md (task IDs noted above where relevant).
-"""
+from garex.api import Archive, open_archive, supported_formats
+from garex.errors import (
+    BridgeError,
+    BridgeNotFoundError,
+    BridgeTimeoutError,
+    CorruptArchiveError,
+    EncryptedArchiveError,
+    GarexError,
+    UnsafePathError,
+    UnsupportedFormatError,
+)
+from garex.models import ArchiveInfo, Entry, FormatInfo
+
+__version__ = "0.1.0"
+
+__all__ = [
+    "__version__",
+    "open_archive",
+    "supported_formats",
+    "Archive",
+    "Entry",
+    "ArchiveInfo",
+    "FormatInfo",
+    "GarexError",
+    "UnsupportedFormatError",
+    "CorruptArchiveError",
+    "EncryptedArchiveError",
+    "BridgeError",
+    "BridgeNotFoundError",
+    "BridgeTimeoutError",
+    "UnsafePathError",
+]

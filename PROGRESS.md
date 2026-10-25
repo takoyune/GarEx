@@ -9,9 +9,9 @@ Format  : See the template below.
 
 ## Current state (overwrite this block each session)
 
-- Current phase: Phase 1 (Bridge + open/list)
-- Last completed task: 0.9 in docs/04_TASKS.md (Phase 0 COMPLETED)
-- Next task: 1.1 in docs/04_TASKS.md (Bridge spike for ADR-004)
+- Current phase: Phase 3 (Convert image/audio)
+- Last completed task: 2.5 in docs/04_TASKS.md (Phase 2 COMPLETED)
+- Next task: 3.1 in docs/04_TASKS.md (Inventory convertible formats from upstream)
 - Blockers / questions for the human: none
 
 ## Session entries (append only)
@@ -45,5 +45,28 @@ Format  : See the template below.
 - Tests run and results: Git submodule and commit resolution verified via CLI.
 - Decisions made: Alignment via `/grill-me` on submodule destination and 11-skill integration list.
 - Open problems: None.
-- Next steps: Task 0.3 (document Windows build steps for upstream GARbro in `docs/BUILDING_UPSTREAM.md`).
+- Next steps: Phase 1 implementation.
+
+### Session 2026-10-25 (Evening)
+- Phase / tasks worked on: Phase 1 (Tasks 1.1-1.8) and Phase 2 (Tasks 2.1-2.5) - BOTH COMPLETED
+- What was done:
+  - Phase 1: Evaluated ADR-004 bridge options (subprocess vs pythonnet); implemented C# helper bridge `garex-bridge.exe` over JSON-lines stdio IPC.
+  - Implemented `src/garex/backends/bridge.py`, `models.py`, `errors.py`, `router.py`, `api.py` (`open_archive`, `supported_formats`), and CLI `garex list`.
+  - Built distributable wheel `garex-0.1.0-py3-none-any.whl` packaging the compiled bridge and upstream assemblies.
+  - Phase 2: Added `extract` command in `bridge/Program.cs` supporting single-entry and bulk extraction.
+  - Implemented path traversal / zip-slip security in `src/garex/security.py` (`sanitize_entry_path`) protecting against directory traversal, UNC escapes, and drive overrides.
+  - Implemented `Archive.extract(entry, destination)` and `Archive.extract_all(destination, progress_callback)` in `src/garex/api.py`.
+  - Added CLI `garex extract <archive> [-o output] [--entry name]`.
+  - Added full test suite in `tests/unit/test_path_safety.py` and `tests/integration/test_extract.py`.
+  - Verified 100% test pass rate (21/21 tests passing).
+- Files created/changed:
+  - `bridge/GarexBridge.csproj`, `bridge/Program.cs`
+  - `src/garex/security.py`
+  - `src/garex/backends/base.py`, `src/garex/backends/bridge.py`
+  - `src/garex/api.py`, `src/garex/cli.py`
+  - `tests/unit/test_path_safety.py`, `tests/integration/test_extract.py`, `tests/unit/test_router.py`
+  - `docs/04_TASKS.md`, `PROGRESS.md`, `CHANGELOG.md`
+- Tests run and results: 21 passed in pytest (100% pass rate).
+- Decisions made: Handled path traversal prevention in both C# bridge and Python API layer.
+- Next steps: Phase 3 (Convert image/audio, tasks 3.1 - 3.5).
 

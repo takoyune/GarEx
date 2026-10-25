@@ -1,8 +1,46 @@
-"""WHAT THIS MUST BECOME
-Frozen dataclasses: Entry(name,size,packed_size,offset,kind), ArchiveInfo, FormatInfo(status native/bridge). (Phase 1 task 1.4)
+"""Data models for garex.
 
-MUST NOT: depend on any backend; hold mutable global state.
-
-Status: PLACEHOLDER. Replace this block with a normal module docstring once implemented.
-Docs: see docs/02_ARCHITECTURE.md and docs/04_TASKS.md (task IDs noted above where relevant).
+All models are frozen dataclasses for immutability and thread safety.
 """
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class Entry:
+    """Represents a single file or resource entry inside an archive."""
+
+    name: str
+    size: int
+    packed_size: int | None = None
+    offset: int = -1
+    type: str = ""
+
+    @property
+    def is_packed(self) -> bool:
+        """Whether the entry is compressed inside the archive."""
+        return self.packed_size is not None and self.packed_size != self.size
+
+
+@dataclass(frozen=True)
+class ArchiveInfo:
+    """Metadata describing an opened archive."""
+
+    format: str
+    description: str
+    count: int
+    backend: str = "bridge"
+
+
+@dataclass(frozen=True)
+class FormatInfo:
+    """Describes a recognized resource format."""
+
+    tag: str
+    kind: str  # "archive", "image", "audio", "script"
+    description: str
+    extensions: tuple[str, ...] = ()
+    can_create: bool = False
+    status: str = "bridge"  # "bridge", "native", "native-partial"

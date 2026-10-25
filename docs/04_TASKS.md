@@ -18,21 +18,21 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 - [x] 0.9 Ask the human to provide sample files per format (or confirm synthetic test generation). Record answer in PROGRESS.md.
 
 ## Phase 1 - Bridge + open/list
-- [ ] 1.1 Bridge spike for ADR-004: implement `list` via helper exe AND via pythonnet; measure; decide; write ADR.
-- [ ] 1.2 Implement `/bridge` C# project (references unmodified upstream assemblies) with commands `probe`, `list`, `formats`.
-- [ ] 1.3 Implement `src/garex/backends/bridge.py` (process management, JSON-lines protocol, timeouts, error mapping).
-- [ ] 1.4 Implement `models.py`, `errors.py`, `api.py` (`open_archive`, `Archive`, `supported_formats`).
-- [ ] 1.5 Implement backend router with `backend="auto|bridge|native"`.
-- [ ] 1.6 Write tests (see 08_TESTING.md): unit tests with a fake bridge + integration tests with real bridge.
-- [ ] 1.7 Build wheel containing the bridge exe + upstream DLLs + license files; test install in a clean venv.
-- [ ] 1.8 Minimal CLI: `garex list <file>`.
+- [x] 1.1 Bridge spike for ADR-004: implement `list` via helper exe AND via pythonnet; measure; decide; write ADR.
+- [x] 1.2 Implement `/bridge` C# project (references unmodified upstream assemblies) with commands `probe`, `list`, `formats`.
+- [x] 1.3 Implement `src/garex/backends/bridge.py` (process management, JSON-lines protocol, timeouts, error mapping).
+- [x] 1.4 Implement `models.py`, `errors.py`, `api.py` (`open_archive`, `Archive`, `supported_formats`).
+- [x] 1.5 Implement backend router with `backend="auto|bridge|native"`.
+- [x] 1.6 Write tests (see 08_TESTING.md): unit tests with a fake bridge + integration tests with real bridge.
+- [x] 1.7 Build wheel containing the bridge exe + upstream DLLs + license files; test install in a clean venv.
+- [x] 1.8 Minimal CLI: `garex list <file>`.
 
 ## Phase 2 - Extract
-- [ ] 2.1 Bridge command `extract` (single + all), with progress events.
-- [ ] 2.2 API: `Archive.extract`, `extract_all`, progress callback, cancellation.
-- [ ] 2.3 Security: reject entry names that escape the destination (`..`, absolute paths, drive letters).
-- [ ] 2.4 Handle encrypted archives: how upstream asks for a scheme/title; expose as `scheme=` parameter.
-- [ ] 2.5 Tests + CLI `garex extract`.
+- [x] 2.1 Bridge command `extract` (single + all), with progress events.
+- [x] 2.2 API: `Archive.extract`, `extract_all`, progress callback, cancellation.
+- [x] 2.3 Security: reject entry names that escape the destination (`..`, absolute paths, drive letters).
+- [x] 2.4 Handle encrypted archives: how upstream asks for a scheme/title; expose as `scheme=` parameter.
+- [x] 2.5 Tests + CLI `garex extract`.
 
 ## Phase 3 - Convert image/audio
 - [ ] 3.1 Inventory convertible formats from upstream (image + audio) into the tracker.

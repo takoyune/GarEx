@@ -415,7 +415,7 @@ Rule    : Never mark `native` without a passing differential test.
 | `PX/LEAF` | archive | px | `GameRes.Formats.Leaf.PxOpener` | yes | - | - | bridge | Leaf multi-frame image |
 | `QPK` | archive | qpk | `GameRes.Formats.Psp.PakOpener` | yes | - | - | bridge | PSP resource archive |
 | `RIO` | archive | rio | `GameRes.Formats.Rugp.RioOpener` | yes | - | - | bridge | rUGP engine resource archive |
-| `RPA` | archive | rpa | `GameRes.Formats.RenPy.RpaOpener` | yes | - | yes | bridge | Ren'Py game engine archive |
+| `RPA` | archive | rpa | `GameRes.Formats.RenPy.RpaOpener` | yes | - | yes | native | Ren'Py game engine archive |
 | `S25` | archive | s25 | `GameRes.Formats.ShiinaRio.S25Opener` | yes | - | - | bridge | ShiinaRio engine multi-image |
 | `SAF` | archive | saf | `GameRes.Formats.Rits.SafOpener` | yes | - | - | bridge | Rit's resource archive |
 | `SAR` | archive | sar | `GameRes.Formats.NScripter.SarOpener` | yes | - | yes | bridge | NScripter game engine resource archive |

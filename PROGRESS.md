@@ -10,8 +10,8 @@ Format  : See the template below.
 ## Current state (overwrite this block each session)
 
 - Current phase: Phase 5 (Native ports)
-- Last completed task: 4.5 in docs/04_TASKS.md (Phase 4 COMPLETED)
-- Next task: 5.0 in docs/04_TASKS.md (Confirm priority list of formats/engines with owner)
+- Last completed task: 5.2 in docs/04_TASKS.md (RPA reference implementation completed)
+- Next task: 5.3 in docs/04_TASKS.md (Port second format: KiriKiri XP3)
 - Blockers / questions for the human: none
 
 ## Session entries (append only)
@@ -114,5 +114,35 @@ Format  : See the template below.
 - Tests run and results: 34 passed in pytest (100% pass rate).
 - Decisions made: Enforce safe copy-modify-write workflow preventing accidental corruption of original visual novel archives.
 - Next steps: Phase 5 (Native ports, tasks 5.0 - 5.n).
+
+### Session 2026-10-25 (Phase 5 - Native Infrastructure & RPA Port)
+- Phase / tasks worked on: Phase 5 (Tasks 5.0, 5.1, and 5.2 - COMPLETED)
+- What was done:
+  - Applied skills: `route-me` (dynamic routing), `reverse-engineer-anything` (decompiling/analyzing `ArcRPA.cs` and `Pickle.cs`), `api-and-interface-design` (`NativeFormat`, `BinaryReader`, `NativeBackend`), `code-simplification` (clean typed Python implementation of Ren'Py RPA reader/creator), `test-driven-development` (differential test suite `test_native_rpa.py`), and `verification-before-completion` (100% byte parity verification).
+  - Task 5.0: The human owner selected Option A (Ren'Py, KiriKiri, CatSystem2, NScripter). Created `docs/ENGINE_STATUS.md` recording all major visual novel engines, their formats, and bridge/native implementation status.
+  - Task 5.1: Built the pure-Python native infrastructure:
+    - Safe bounds-checked binary reading in `src/garex/backends/native/binary.py` (`BinaryReader`).
+    - Base format interface and discovery registry in `src/garex/backends/native/base.py` (`NativeFormat`, `@register_format`).
+    - Dynamic backend dispatch in `src/garex/backends/native/__init__.py` (`NativeBackend`).
+    - Differential testing tool `tools/difftest.py` asserting entry-level and SHA-256 byte parity against GARbro Bridge.
+    - Wired `NativeBackend` into `src/garex/backends/router.py` enabling native-first auto routing.
+  - Task 5.2: Reverse-engineered and ported the first native format end-to-end:
+    - Analyzed `vendor/GARbro/ArcFormats/RenPy/ArcRPA.cs` and created technical specification `docs/formats/RPA.md`.
+    - Implemented `src/garex/backends/native/formats/rpa.py` supporting both reading and creating RPA-3.0 archives.
+    - Created differential and integration tests in `tests/integration/test_native_rpa.py` verifying:
+      1. Native reading and extracting bridge-created RPA archives with 100% byte parity across all files.
+      2. Native creating RPA archives and verifying GARbro bridge can open, list, and extract them with 100% byte parity.
+      3. Error handling on corrupt signatures.
+    - Updated `docs/10_FORMAT_TRACKER.md` setting RPA status to `native`.
+    - Full test suite expanded to 37 passed tests (100% pass rate).
+- Files created/changed:
+  - `docs/ENGINE_STATUS.md`, `docs/formats/RPA.md`, `tools/difftest.py`
+  - `src/garex/backends/native/binary.py`, `src/garex/backends/native/base.py`
+  - `src/garex/backends/native/__init__.py`, `src/garex/backends/native/formats/rpa.py`
+  - `src/garex/backends/router.py`, `tests/integration/test_native_rpa.py`
+  - `docs/04_TASKS.md`, `docs/10_FORMAT_TRACKER.md`, `CHANGELOG.md`, `PROGRESS.md`
+- Tests run and results: 37 passed in pytest (100% pass rate).
+- Decisions made: Use `encoding="bytes"` in Python 3 pickle unpickling to guarantee safe handling of arbitrary binary header prefixes without ASCII decoding errors.
+- Next steps: Task 5.3 (Port second format: KiriKiri `XP3`).
 
 

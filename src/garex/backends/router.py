@@ -18,6 +18,7 @@ if TYPE_CHECKING:
 BackendMode = Literal["auto", "bridge", "native"]
 
 _DEFAULT_BRIDGE: BridgeBackend | None = None
+_DEFAULT_NATIVE: BaseBackend | None = None
 
 
 def get_bridge_backend() -> BridgeBackend:
@@ -26,6 +27,15 @@ def get_bridge_backend() -> BridgeBackend:
     if _DEFAULT_BRIDGE is None:
         _DEFAULT_BRIDGE = BridgeBackend()
     return _DEFAULT_BRIDGE
+
+
+def get_native_backend() -> BaseBackend:
+    """Return the shared default NativeBackend instance."""
+    global _DEFAULT_NATIVE
+    if _DEFAULT_NATIVE is None:
+        from garex.backends.native import NativeBackend
+        _DEFAULT_NATIVE = NativeBackend()
+    return _DEFAULT_NATIVE
 
 
 def route_archive(
@@ -37,27 +47,28 @@ def route_archive(
     """Determine the appropriate backend for the archive and retrieve its entries."""
     path = Path(path).resolve()
     bridge = bridge_backend or get_bridge_backend()
+    native = native_backend or (get_native_backend() if native_backend is None and bridge_backend is None else native_backend)
 
     if mode == "native":
-        if native_backend is None:
+        if native is None:
             raise UnsupportedFormatError(f"No native format implementation available for '{path.name}'")
-        res = native_backend.probe(path)
+        res = native.probe(path)
         if not res:
             raise UnsupportedFormatError(f"Native backend does not support '{path.name}'")
-        info, entries = native_backend.list_entries(path)
-        return native_backend, info, entries
+        info, entries = native.list_entries(path)
+        return native, info, entries
 
     if mode == "bridge":
         info, entries = bridge.list_entries(path)
         return bridge, info, entries
 
     # mode == "auto": Native first, then bridge fallback
-    if native_backend is not None:
+    if native is not None:
         try:
-            res = native_backend.probe(path)
+            res = native.probe(path)
             if res:
-                info, entries = native_backend.list_entries(path)
-                return native_backend, info, entries
+                info, entries = native.list_entries(path)
+                return native, info, entries
         except Exception:
             pass  # Fall back to bridge
 

@@ -13,6 +13,7 @@ Tests:
 from __future__ import annotations
 
 import hashlib
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -182,7 +183,9 @@ def test_cli_create(tmp_path: Path) -> None:
         "--format",
         "ZIP",
     ]
-    res = subprocess.run(cmd, capture_output=True, text=True, check=False)
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[2] / "src")
+    res = subprocess.run(cmd, capture_output=True, text=True, check=False, env=env)
     assert res.returncode == 0, f"CLI error: {res.stderr}"
     assert "Created ZIP archive" in res.stdout
 

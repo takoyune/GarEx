@@ -38,6 +38,13 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Integration test suite `tests/integration/test_roundtrip.py` with 7 tests verifying roundtrip creation, extract-modify-repack, Ren'Py RPA format, and safe error handling (Phase 4 Task 4.4).
 - CLI command `garex create <archive> <inputs...> [--format TAG] [--base-dir DIR]` in `src/garex/cli.py` (Phase 4 Task 4.5).
 - Test suite expanded to 34 tests passing at 100% pass rate.
+- Visual novel engine implementation status tracker in `docs/ENGINE_STATUS.md` recording all supported engines, formats, bridge status, and native status (Task 5.0).
+- Pure-Python native infrastructure in `src/garex/backends/native/`: `BinaryReader` with safe bounds-checked reads in `binary.py`, `NativeFormat` base class and format registry in `base.py`, and `NativeBackend` implementing `BaseBackend` (Task 5.1).
+- Differential testing tool `tools/difftest.py` comparing native vs bridge metadata and SHA-256 byte parity (Task 5.1).
+- Ported first native format end-to-end: Ren'Py (`RPA`) archive decoder and creator in `src/garex/backends/native/formats/rpa.py` with 100% byte parity against GARbro (Task 5.2).
+- Technical format specification `docs/formats/RPA.md` based on reverse-engineered upstream source `vendor/GARbro/ArcFormats/RenPy/ArcRPA.cs`.
+- Integration and differential tests in `tests/integration/test_native_rpa.py` expanding test suite to 37 tests passing at 100% pass rate.
+- Connected `NativeBackend` into `router.py` enabling seamless native-first execution with bridge fallback.
 
 ### Changed
 - Updated `vendor/README.md` recording pinned commit details.
@@ -46,4 +53,7 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Updated `docs/02_ARCHITECTURE.md` with answers regarding format discovery (MEF), encryption/scheme storage (`Formats.dat`), WPF dependencies, and archive sizes (Phase 0 Task 0.6, 0.8).
 - Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, and `PROGRESS.md` reflecting completed status for Phase 0, Phase 1, Phase 2, Phase 3, and Phase 4.
 - Updated `bridge/README.md` reflecting fully implemented bridge commands (`probe`, `list`, `formats`, `extract`, `convert_image`, `convert_audio`, `create`) and documenting build instructions.
+
+### Fixed
+- Fixed subprocess `PYTHONPATH` inheritance in `test_cli_create` integration test.
 

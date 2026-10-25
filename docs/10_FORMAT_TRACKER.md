@@ -472,7 +472,7 @@ Rule    : Never mark `native` without a passing differential test.
 | `WVX` | archive | wvx, wrc | `GameRes.Formats.Will.WrcOpener` | yes | - | - | bridge | Tanaka Tatsuhiro's engine audio archive |
 | `XARC/XUSE` | archive | arc | `GameRes.Formats.Xuse.XarcOpener` | yes | - | - | bridge | Xuse resource archive |
 | `XFL` | archive | xfl | `GameRes.Formats.Liar.XflOpener` | yes | - | yes | bridge | Liar-soft game resource archive |
-| `XP3` | archive | xp3, exe | `GameRes.Formats.KiriKiri.Xp3Opener` | yes | - | yes | bridge | KiriKiri game engine resource archive |
+| `XP3` | archive | xp3, exe | `GameRes.Formats.KiriKiri.Xp3Opener` | yes | - | yes | native | KiriKiri game engine resource archive |
 | `XPK` | archive | xpk | `GameRes.Formats.KiriKiri.XpkOpener` | yes | - | - | bridge | KAG System resource archive |
 | `YKC` | archive | ykc, dat | `GameRes.Formats.Yuka.YkcOpener` | yes | - | yes | bridge | Yuka engine resource archive |
 | `YPF` | archive | ypf | `GameRes.Formats.YuRis.YpfOpener` | yes | - | yes | bridge | Yu-Ris game engine resource archive |

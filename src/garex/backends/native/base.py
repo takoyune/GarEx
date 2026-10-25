@@ -48,6 +48,28 @@ class NativeFormat(ABC):
 _FORMAT_REGISTRY: dict[str, NativeFormat] = {}
 
 
+_FORMATS_LOADED = False
+
+
+def ensure_formats_loaded() -> None:
+    """Dynamically import all modules in formats/ to trigger @register_format."""
+    global _FORMATS_LOADED
+    if _FORMATS_LOADED:
+        return
+    _FORMATS_LOADED = True
+
+    formats_dir = Path(__file__).parent / "formats"
+    if not formats_dir.is_dir():
+        return
+
+    import importlib
+    import pkgutil
+
+    for _, modname, ispkg in pkgutil.iter_modules([str(formats_dir)]):
+        if not ispkg and not modname.startswith("_"):
+            importlib.import_module(f"garex.backends.native.formats.{modname}")
+
+
 def register_format(cls: Type[NativeFormat]) -> Type[NativeFormat]:
     """Decorator to register a native format class."""
     instance = cls()
@@ -57,16 +79,19 @@ def register_format(cls: Type[NativeFormat]) -> Type[NativeFormat]:
 
 def get_native_format(tag: str) -> NativeFormat | None:
     """Retrieve a registered native format by tag."""
+    ensure_formats_loaded()
     return _FORMAT_REGISTRY.get(tag.upper())
 
 
 def list_native_formats() -> list[NativeFormat]:
     """Return all registered native format instances."""
+    ensure_formats_loaded()
     return list(_FORMAT_REGISTRY.values())
 
 
 def probe_native_format(reader: BinaryReader) -> NativeFormat | None:
     """Probe all registered native formats against a binary reader."""
+    ensure_formats_loaded()
     for fmt in _FORMAT_REGISTRY.values():
         pos = reader.tell()
         try:

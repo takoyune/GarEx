@@ -87,6 +87,29 @@ class BinaryReader:
         """Alias for read(size)."""
         return self.read(size)
 
+    def read_bytes(self, size: int) -> bytes:
+        """Alias for read(size)."""
+        return self.read(size)
+
+    # Convenient Little-Endian aliases (default for x86 visual novel formats)
+    def read_u16(self) -> int:
+        return self.read_u16_le()
+
+    def read_i16(self) -> int:
+        return self.read_i16_le()
+
+    def read_u32(self) -> int:
+        return self.read_u32_le()
+
+    def read_i32(self) -> int:
+        return self.read_i32_le()
+
+    def read_u64(self) -> int:
+        return self.read_u64_le()
+
+    def read_i64(self) -> int:
+        return self.read_i64_le()
+
     def peek(self, size: int) -> bytes:
         """Peek ahead by size bytes without advancing position."""
         pos = self.tell()

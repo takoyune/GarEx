@@ -28,30 +28,19 @@ from garex.models import ArchiveInfo, Entry, FormatInfo
 from garex.security import sanitize_entry_path
 
 
-_FORMATS_LOADED = False
-
-
-def _ensure_formats_loaded() -> None:
-    """Dynamically import all modules in formats/ to trigger @register_format."""
-    global _FORMATS_LOADED
-    if _FORMATS_LOADED:
-        return
-    _FORMATS_LOADED = True
-
-    formats_dir = Path(__file__).parent / "formats"
-    if not formats_dir.is_dir():
-        return
-
-    for _, modname, ispkg in pkgutil.iter_modules([str(formats_dir)]):
-        if not ispkg and not modname.startswith("_"):
-            importlib.import_module(f"garex.backends.native.formats.{modname}")
+from garex.backends.native.base import (
+    ensure_formats_loaded,
+    get_native_format,
+    list_native_formats,
+    probe_native_format,
+)
 
 
 class NativeBackend(BaseBackend):
     """Pure Python backend dispatching to registered NativeFormat decoders."""
 
     def __init__(self) -> None:
-        _ensure_formats_loaded()
+        ensure_formats_loaded()
 
     def probe(self, path: Path) -> dict[str, Any] | None:
         """Probe the file with native decoders."""
@@ -82,7 +71,7 @@ class NativeBackend(BaseBackend):
 
     def supported_formats(self) -> list[FormatInfo]:
         """Return all formats implemented natively."""
-        _ensure_formats_loaded()
+        ensure_formats_loaded()
         return [
             FormatInfo(
                 tag=f.tag,

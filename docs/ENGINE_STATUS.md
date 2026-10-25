@@ -17,7 +17,7 @@ This document tracks all Visual Novel game engines and resource formats supporte
 | **Primary Roadmap** | **Option A** | Ren'Py, KiriKiri, CatSystem2, NScripter |
 | **Total Engine Families Documented** | **50+** | Major commercial and doujin visual novel engines |
 | **Bridge Backend Coverage** | **100%** | All formats recognized by upstream GARbro |
-| **Native Pure-Python Coverage** | **1 Complete / 3 In-Queue** | `RPA` (Ren'Py 3.0/2.0/1.0) complete with round-trip creation |
+| **Native Pure-Python Coverage** | **2 Complete / 2 In-Queue** | `RPA` (Ren'Py) & `XP3` (KiriKiri) complete with round-trip creation |
 | **Differential Test Verification** | **100% Byte Parity** | Verified with `tools/difftest.py` against `garex-bridge.exe` |
 
 ---
@@ -29,7 +29,7 @@ Option A focuses on the most ubiquitous visual novel engines in the internationa
 | Engine | Format Tag | Extensions | Bridge Read | Bridge Create | Native Read | Native Create | Parity Verified | Status |
 |---|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Ren'Py** | `RPA` | `.rpa` | [x] | [x] | [x] | [x] | [x] 100% | **COMPLETE (Native)** |
-| **KiriKiri / TVP** | `XP3` | `.xp3` | [x] | [x] | [ ] | [ ] | [ ] | **IN PROGRESS** (Task 5.3) |
+| **KiriKiri / TVP** | `XP3` | `.xp3` | [x] | [x] | [x] | [x] | [x] 100% | **COMPLETE (Native)** |
 | **CatSystem2** | `INT` | `.int` | [x] | [x] | [ ] | [ ] | [ ] | **QUEUED** (Task 5.4) |
 | **NScripter** | `SAR` | `.sar` | [x] | [x] | [ ] | [ ] | [ ] | **QUEUED** (Task 5.5) |
 | **NScripter / ONS** | `NSA` | `.nsa` | [x] | [x] | [ ] | [ ] | [ ] | **QUEUED** (Task 5.5) |
@@ -43,7 +43,7 @@ Option A focuses on the most ubiquitous visual novel engines in the internationa
 | Engine / Developer | Format Tag | Extensions | Bridge Support | Native Support | Creation Support | Description / Prominent Titles |
 |---|---|---|:---:|:---:|:---:|---|
 | **Ren'Py** | `RPA` | `.rpa` | **Complete** | **Complete (Native)** | Yes (Bridge & Native) | *Doki Doki Literature Club*, *Katawa Shoujo*, *Slay the Princess* |
-| **KiriKiri / TVP** | `XP3` | `.xp3` | **Complete** | In Progress (Phase 5) | Yes (Bridge) | *Fate/stay night*, *Fate/hollow ataraxia*, *Tsukihime*, *Witch on the Holy Night* |
+| **KiriKiri / TVP** | `XP3` | `.xp3` | **Complete** | **Complete (Native)** | Yes (Bridge & Native) | *Fate/stay night*, *Fate/hollow ataraxia*, *Tsukihime*, *Witch on the Holy Night* |
 | **CatSystem2** | `INT` | `.int` | **Complete** | Queued (Phase 5) | Yes (Bridge) | *Grisaia no Kajitsu*, *Chrono Clock*, Frontwing & Windmill games |
 | **NScripter** | `SAR` | `.sar` | **Complete** | Queued (Phase 5) | Yes (Bridge) | *Tsukihime*, *Kagetsu Tohya*, Naoki Takahashi engine |
 | **NScripter / ONS** | `NSA` | `.nsa` | **Complete** | Queued (Phase 5) | Yes (Bridge) | *Higurashi no Naku Koro ni*, *Umineko no Naku Koro ni* |

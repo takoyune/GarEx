@@ -302,12 +302,24 @@ def create_archive(
     import shutil
     import tempfile
     from collections.abc import Mapping, Sequence
-    from garex.backends.bridge import BridgeBackend
+    if backend == "native":
+        from garex.backends.native import NativeBackend
+        b = NativeBackend()
+    elif backend == "bridge":
+        from garex.backends.bridge import BridgeBackend
+        b = BridgeBackend()
+    else:
+        from garex.backends.native.base import get_native_format
+        fmt = get_native_format(format) if format != "auto" else None
+        if fmt and fmt.can_write:
+            from garex.backends.native import NativeBackend
+            b = NativeBackend()
+        else:
+            from garex.backends.bridge import BridgeBackend
+            b = BridgeBackend()
 
     dest_path = Path(path).resolve()
     dest_path.parent.mkdir(parents=True, exist_ok=True)
-
-    b = BridgeBackend()
 
     # Case 1: A directory path was provided
     if isinstance(files, (str, Path)):

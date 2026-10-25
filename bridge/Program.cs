@@ -61,6 +61,26 @@ namespace GarexBridge
         {
             try
             {
+                // Register default parameter request handler so console/bridge does not cancel on queries
+                FormatCatalog.Instance.ParametersRequest += (s, e) =>
+                {
+                    var format = s as IResource;
+                    if (format != null)
+                    {
+                        e.Options = format.GetDefaultOptions();
+                        e.InputResult = true;
+                    }
+                };
+
+                // Configure XP3 opener to not force encryption prompt on unencrypted archives
+                foreach (var format in FormatCatalog.Instance.ArcFormats)
+                {
+                    if (format is GameRes.Formats.KiriKiri.Xp3Opener xp3)
+                    {
+                        xp3.ForceEncryptionQuery = false;
+                    }
+                }
+
                 string schemeFile = Path.Combine(FormatCatalog.Instance.DataDirectory, "Formats.dat");
                 if (File.Exists(schemeFile))
                 {
@@ -719,6 +739,10 @@ namespace GarexBridge
                 }
 
                 ResourceOptions options = targetFormat.GetDefaultOptions();
+                if (options is GameRes.Formats.KiriKiri.Xp3Options xp3Options)
+                {
+                    xp3Options.RetainDirs = true;
+                }
 
                 tmpFile = Path.Combine(destDir, Path.GetRandomFileName() + ".tmp");
                 using (var outputStream = File.Create(tmpFile))

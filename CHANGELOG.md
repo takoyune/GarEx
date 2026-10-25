@@ -44,16 +44,25 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Ported first native format end-to-end: Ren'Py (`RPA`) archive decoder and creator in `src/garex/backends/native/formats/rpa.py` with 100% byte parity against GARbro (Task 5.2).
 - Technical format specification `docs/formats/RPA.md` based on reverse-engineered upstream source `vendor/GARbro/ArcFormats/RenPy/ArcRPA.cs`.
 - Integration and differential tests in `tests/integration/test_native_rpa.py` expanding test suite to 37 tests passing at 100% pass rate.
-- Connected `NativeBackend` into `router.py` enabling seamless native-first execution with bridge fallback.
+- Ported second native format: KiriKiri 2 / KAG3 (`XP3`) decoder and creator in `src/garex/backends/native/formats/xp3.py` with 100% byte and metadata parity against GARbro (Task 5.3).
+- Technical format specification `docs/formats/XP3.md` based on reverse-engineered `vendor/GARbro/ArcFormats/KiriKiri/ArcXP3.cs`.
+- Integration and differential test suite in `tests/integration/test_native_xp3.py` expanding test suite to 40 tests passing at 100% pass rate.
+- Ergonomic aliases added to `BinaryReader`: `read_bytes`, `read_u16`, `read_i16`, `read_u32`, `read_i32`, `read_u64`, `read_i64`.
+- Auto-loading of native formats upon any registry access via `ensure_formats_loaded()`.
 
 ### Changed
 - Updated `vendor/README.md` recording pinned commit details.
 - Updated `docs/06_FORMAT_PORTING_GUIDE.md` integrating reverse-engineering and TDD skills into the format porting steps.
 - Updated `reference/GARBRO_REPO_MAP.md` filling all verified repository facts and answering architectural questions (Phase 0 Task 0.5).
 - Updated `docs/02_ARCHITECTURE.md` with answers regarding format discovery (MEF), encryption/scheme storage (`Formats.dat`), WPF dependencies, and archive sizes (Phase 0 Task 0.6, 0.8).
-- Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, and `PROGRESS.md` reflecting completed status for Phase 0, Phase 1, Phase 2, Phase 3, and Phase 4.
+- Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, `docs/ENGINE_STATUS.md`, and `PROGRESS.md` reflecting completed status for Task 5.3 (KiriKiri XP3).
+- Updated `docs/10_FORMAT_TRACKER.md` setting status of `XP3` to `native`.
 - Updated `bridge/README.md` reflecting fully implemented bridge commands (`probe`, `list`, `formats`, `extract`, `convert_image`, `convert_audio`, `create`) and documenting build instructions.
+- Configured `garex.create_archive` to dynamically route creation to `NativeBackend` when a native format with write capability is available.
 
 ### Fixed
 - Fixed subprocess `PYTHONPATH` inheritance in `test_cli_create` integration test.
+- Registered `FormatCatalog.Instance.ParametersRequest` handler in bridge helper to prevent `OperationCanceledException` during parameter queries.
+- Configured `RetainDirs = true` on `Xp3Options` in bridge helper to preserve directory structures during XP3 creation.
+- Disabled `ForceEncryptionQuery` on `Xp3Opener` for unencrypted archives in bridge helper.
 

@@ -9,10 +9,10 @@ Format  : See the template below.
 
 ## Current state (overwrite this block each session)
 
-- Current phase: Phase 0 (in progress)
-- Last completed task: 0.2 in docs/04_TASKS.md
-- Next task: 0.3 in docs/04_TASKS.md
-- Blockers / questions for the human: none
+- Current phase: Phase 0 (in progress — tasks 0.1 through 0.8 completed)
+- Last completed task: 0.8 in docs/04_TASKS.md
+- Next task: 0.9 in docs/04_TASKS.md (sample files / synthetic test generation confirmation)
+- Blockers / questions for the human: Confirm synthetic test fixture generation strategy (Task 0.9)
 
 ## Session entries (append only)
 

@@ -10,6 +10,11 @@ build/
 bin/
 obj/
 src/garex/_bridge/
+# tools binaries and packages
+tools/nuget.exe
+tools/packages/
+tools/formats_inventory.json
+
 # never commit game data or extracted assets
 samples/
 *.xp3

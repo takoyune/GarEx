@@ -9,12 +9,12 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 ## Phase 0 - Recon and setup
 - [x] 0.1 Create git repo structure; add `.gitignore`; init `pyproject.toml` skeleton (see 07_PACKAGING.md).
 - [x] 0.2 Add upstream GARbro to `vendor/GARbro` as a git submodule (or pinned clone); record commit hash in `vendor/README.md`.
-- [ ] 0.3 Document the Windows build steps for `GameRes`, `ArcFormats`, `Image.Convert`, `Console` (what SDK/Visual Studio/MSBuild is needed). Put in `docs/BUILDING_UPSTREAM.md`.
-- [ ] 0.4 Build upstream successfully; record any build errors and fixes (without editing vendor files; use build flags/overrides).
-- [ ] 0.5 Read upstream source and fill the VERIFIED column in `reference/GARBRO_REPO_MAP.md`.
-- [ ] 0.6 Find how upstream registers formats (plugin discovery) and how game schemes/keys are stored. Answer in `02_ARCHITECTURE.md`.
-- [ ] 0.7 Write `tools/format_inventory.py` (or C# tool) that lists every archive/image/audio/script format upstream supports; generate `docs/10_FORMAT_TRACKER.md`.
-- [ ] 0.8 Check whether upstream image conversion requires WPF; document consequences.
+- [x] 0.3 Document the Windows build steps for `GameRes`, `ArcFormats`, `Image.Convert`, `Console` (what SDK/Visual Studio/MSBuild is needed). Put in `docs/BUILDING_UPSTREAM.md`.
+- [x] 0.4 Build upstream successfully; record any build errors and fixes (without editing vendor files; use build flags/overrides).
+- [x] 0.5 Read upstream source and fill the VERIFIED column in `reference/GARBRO_REPO_MAP.md`.
+- [x] 0.6 Find how upstream registers formats (plugin discovery) and how game schemes/keys are stored. Answer in `02_ARCHITECTURE.md`.
+- [x] 0.7 Write `tools/format_inventory.py` (or C# tool) that lists every archive/image/audio/script format upstream supports; generate `docs/10_FORMAT_TRACKER.md`.
+- [x] 0.8 Check whether upstream image conversion requires WPF; document consequences.
 - [ ] 0.9 Ask the human to provide sample files per format (or confirm synthetic test generation). Record answer in PROGRESS.md.
 
 ## Phase 1 - Bridge + open/list

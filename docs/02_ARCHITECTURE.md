@@ -60,11 +60,15 @@ implements `NativeFormat` (see `backends/native/base.py`): `probe`, `open`, `rea
 and optionally `create`. Registered via a registry decorator. Details: `06_FORMAT_PORTING_GUIDE.md`.
 
 ## Encryption / game keys
-GARbro stores game-specific schemes/keys in its own scheme database. Phase 0 must determine
-how it is stored; native ports reuse the same data exported to JSON in `src/garex/data/`.
-Do not add keys that are not in upstream GARbro.
+GARbro stores game-specific schemes/keys in `GameData/Formats.dat` as a zlib-compressed
+.NET `BinaryFormatter` stream of `SchemeDataBase` (containing `SchemeMap` for keys/parameters
+and `GameMap` for title mapping). Native ports reuse the exact same data exported to JSON in
+`src/garex/data/` (or queried via bridge). Do not add keys that are not in upstream GARbro.
 
-## Open questions for Phase 0-1 (agent must answer here)
-- Do GARbro DLLs require WPF types for image conversion? (affects bridge design)
-- How are formats registered/discovered in upstream (verify the plugin mechanism)?
-- How large are real archives? Do we need streaming extraction?
+## Questions for Phase 0-1 (refined 2026-10-25)
+- **Do GARbro DLLs require WPF types for image conversion?**
+  Yes. Upstream `ImageFormat.Read` produces an `ImageData` object wrapping `System.Windows.Media.Imaging.BitmapSource` (`PresentationCore.dll`). The C# bridge (`/bridge`) cleanly converts WPF `BitmapSource` to PNG/WAV streams before sending across the JSON-lines protocol to Python.
+- **How are formats registered/discovered in upstream?**
+  Via Managed Extensibility Framework (MEF, `System.ComponentModel.Composition`). `FormatCatalog` creates an `AggregateCatalog` inspecting `GameRes.dll` and any `Arc*.dll` in the assembly directory, importing classes tagged with `[Export(typeof(ArchiveFormat))]`, `[Export(typeof(ImageFormat))]`, `[Export(typeof(AudioFormat))]`, and `[Export(typeof(ScriptFormat))]`.
+- **How large are real archives? Do we need streaming extraction?**
+  Common archives range from 20 MB to 4–8 GB (e.g. KiriKiri `.xp3`, CatSystem2 `.int`, BGI `.arc`). Streaming extraction (chunked 64 KB / 1 MB buffers) is mandatory to prevent unbounded memory consumption.

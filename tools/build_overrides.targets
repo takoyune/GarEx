@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <TargetFrameworkRootPath>D:\code iwan\GarEx\tools\packages\Microsoft.NETFramework.ReferenceAssemblies.net46.1.0.3\build</TargetFrameworkRootPath>
+  </PropertyGroup>
+
+  <!-- Override legacy NuGet package import check so build succeeds without touching vendor -->
+  <Target Name="EnsureNuGetPackageBuildImports" />
+
+  <!-- Override satellite assembly generation if .NET Framework SDK tools (al.exe) are absent -->
+  <Target Name="GenerateSatelliteAssemblies">
+    <ItemGroup>
+      <IntermediateSatelliteAssembliesWithTargetPath Remove="@(IntermediateSatelliteAssembliesWithTargetPath)" />
+    </ItemGroup>
+  </Target>
+</Project>

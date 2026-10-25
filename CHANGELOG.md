@@ -31,11 +31,19 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Public standalone conversion API functions `convert_image` and `convert_audio` in `src/garex/api.py`.
 - CLI command `garex convert <file> -o <output>` and `garex extract --convert` flag in `src/garex/cli.py`.
 - Integration tests in `tests/integration/test_convert.py` expanding test suite to 27 tests passing at 100% pass rate.
+- Inventory of 19 creatable archive formats verified in upstream GARbro (`XP3`, `INT`, `SAR`, `NSA`, `RPA`, `YPF`, `YKC`, `ZIP`, `MAJIRO`, `NPK`, `NPA`, `NPA-SG`, `ARC/Will`, `ARC/WillV2`, `AMI`, `XFL`, `PD`, `DAT/EGO/1`, `PAK/HyPack`) (Phase 4 Task 4.1).
+- Bridge command `create` in `bridge/Program.cs` supporting atomic archive creation and error handling (Phase 4 Task 4.2).
+- Public archive creation API `garex.create_archive` accepting directory trees, file sequences, or entry mappings (Phase 4 Task 4.3).
+- Safe copy-modify-write repacking API `garex.replace_entries`, strictly prohibiting in-place mutation of original archives (Phase 4 Task 4.3).
+- Integration test suite `tests/integration/test_roundtrip.py` with 7 tests verifying roundtrip creation, extract-modify-repack, Ren'Py RPA format, and safe error handling (Phase 4 Task 4.4).
+- CLI command `garex create <archive> <inputs...> [--format TAG] [--base-dir DIR]` in `src/garex/cli.py` (Phase 4 Task 4.5).
+- Test suite expanded to 34 tests passing at 100% pass rate.
 
 ### Changed
 - Updated `vendor/README.md` recording pinned commit details.
 - Updated `docs/06_FORMAT_PORTING_GUIDE.md` integrating reverse-engineering and TDD skills into the format porting steps.
 - Updated `reference/GARBRO_REPO_MAP.md` filling all verified repository facts and answering architectural questions (Phase 0 Task 0.5).
 - Updated `docs/02_ARCHITECTURE.md` with answers regarding format discovery (MEF), encryption/scheme storage (`Formats.dat`), WPF dependencies, and archive sizes (Phase 0 Task 0.6, 0.8).
-- Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, and `PROGRESS.md` reflecting completed status for Phase 0, Phase 1, Phase 2, and Phase 3.
+- Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, and `PROGRESS.md` reflecting completed status for Phase 0, Phase 1, Phase 2, Phase 3, and Phase 4.
+- Updated `bridge/README.md` reflecting fully implemented bridge commands (`probe`, `list`, `formats`, `extract`, `convert_image`, `convert_audio`, `create`) and documenting build instructions.
 

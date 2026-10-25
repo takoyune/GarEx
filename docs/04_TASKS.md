@@ -42,11 +42,11 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 - [x] 3.5 CLI `garex convert`.
 
 ## Phase 4 - Create / repack
-- [ ] 4.1 Inventory which formats upstream can create.
-- [ ] 4.2 Bridge command `create`.
-- [ ] 4.3 API `create_archive`, plus helper to replace files inside an existing archive (copy-modify-write, never in place on the original).
-- [ ] 4.4 Round-trip tests.
-- [ ] 4.5 CLI `garex create`.
+- [x] 4.1 Inventory which formats upstream can create.
+- [x] 4.2 Bridge command `create`.
+- [x] 4.3 API `create_archive`, plus helper to replace files inside an existing archive (copy-modify-write, never in place on the original).
+- [x] 4.4 Round-trip tests.
+- [x] 4.5 CLI `garex create`.
 
 ## Phase 5 - Native ports (repeat per format)
 - [ ] 5.0 Ask the owner for the priority list of formats/engines.

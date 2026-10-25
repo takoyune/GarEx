@@ -102,6 +102,29 @@ def main(argv: list[str] | None = None) -> int:
         help="Resource type (default: auto).",
     )
 
+    # create subcommand
+    create_parser = subparsers.add_parser("create", help="Create or repack an archive.")
+    create_parser.add_argument("archive", type=str, help="Destination archive path.")
+    create_parser.add_argument("inputs", nargs="+", type=str, help="Files or directory to include in the archive.")
+    create_parser.add_argument(
+        "--format",
+        type=str,
+        default="auto",
+        help="Target archive format tag (e.g. ZIP, RPA, XP3; default: auto).",
+    )
+    create_parser.add_argument(
+        "--base-dir",
+        type=str,
+        default=None,
+        help="Base directory for relative file paths.",
+    )
+    create_parser.add_argument(
+        "--backend",
+        choices=["auto", "bridge", "native"],
+        default="auto",
+        help="Backend to use (default: auto).",
+    )
+
     args = parser.parse_args(argv)
 
     try:
@@ -121,6 +144,14 @@ def main(argv: list[str] | None = None) -> int:
             )
         if args.command == "convert":
             return cmd_convert(args.source, args.output, fmt=args.format, res_type=args.type)
+        if args.command == "create":
+            return cmd_create(
+                args.archive,
+                inputs=args.inputs,
+                fmt=args.format,
+                base_dir=args.base_dir,
+                backend=args.backend,
+            )
     except garex.GarexError as ex:
         sys.stderr.write(f"Error: {ex}\n")
         return 1
@@ -230,6 +261,31 @@ def cmd_formats(kind: str = "all") -> int:
         print(f"{f.tag:<12} {f.kind:<8} {f.status:<8} {exts:<18} {f.description}")
 
     print(f"\nTotal: {len(formats)} formats")
+    return 0
+
+
+def cmd_create(
+    archive_path: str,
+    inputs: list[str],
+    fmt: str = "auto",
+    base_dir: str | None = None,
+    backend: str = "auto",
+) -> int:
+    dest = Path(archive_path)
+    if len(inputs) == 1 and Path(inputs[0]).is_dir():
+        target_inputs: str | Path | list[str | Path] = Path(inputs[0])
+    else:
+        target_inputs = [Path(p) for p in inputs]
+
+    print(f"Creating archive at '{dest}' (format={fmt.upper()})...")
+    with garex.create_archive(
+        dest,
+        target_inputs,
+        format=fmt,
+        base_dir=Path(base_dir) if base_dir else None,
+        backend=backend,  # type: ignore[arg-type]
+    ) as arc:
+        print(f"Created {arc.format} archive at '{arc.path}' with {len(arc)} entries.")
     return 0
 
 

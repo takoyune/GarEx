@@ -261,3 +261,21 @@ class BridgeBackend(BaseBackend):
         }
         return self.client.send_command("convert_audio", args)
 
+    def create_archive(
+        self,
+        path: Path,
+        files: list[str],
+        base_dir: Path | None = None,
+        format: str | None = None,
+    ) -> dict[str, Any]:
+        abs_path = Path(path).resolve()
+        args: dict[str, Any] = {
+            "path": str(abs_path),
+            "files": files,
+        }
+        if base_dir is not None:
+            args["base_dir"] = str(Path(base_dir).resolve())
+        if format is not None and format.lower() != "auto":
+            args["format"] = format.upper()
+        return self.client.send_command("create", args)
+

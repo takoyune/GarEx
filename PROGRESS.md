@@ -9,9 +9,9 @@ Format  : See the template below.
 
 ## Current state (overwrite this block each session)
 
-- Current phase: Phase 4 (Create / repack)
-- Last completed task: 3.5 in docs/04_TASKS.md (Phase 3 COMPLETED)
-- Next task: 4.1 in docs/04_TASKS.md (Inventory which formats upstream can create)
+- Current phase: Phase 5 (Native ports)
+- Last completed task: 4.5 in docs/04_TASKS.md (Phase 4 COMPLETED)
+- Next task: 5.0 in docs/04_TASKS.md (Confirm priority list of formats/engines with owner)
 - Blockers / questions for the human: none
 
 ## Session entries (append only)
@@ -90,5 +90,29 @@ Format  : See the template below.
 - Tests run and results: 27 passed in pytest (100% pass rate).
 - Decisions made: Audio conversion defaults to standard PCM WAV; image conversion defaults to PNG with full alpha support.
 - Next steps: Phase 4 (Create / repack, tasks 4.1 - 4.5).
+
+### Session 2026-10-25 (Late Night)
+- Phase / tasks worked on: Phase 4 (Create / repack, tasks 4.1 - 4.5 - COMPLETED)
+- What was done:
+  - Applied skills: `route-me` (active router), `reverse-engineer-anything` (analyzing upstream `GarCreate.cs`, `ArchiveFormat.Create`, and creatable format implementations `ArcZIP.cs`, `ArcRPA.cs`, `ArcXP3.cs`, `ArcINT.cs`), `api-and-interface-design` (designing `create_archive` and copy-modify-write `replace_entries` API), `backend-patterns` (IPC `create` command with atomic staging and temp-file safety), `test-driven-development` (TDD Red->Green workflow in `test_roundtrip.py`), and `verification-before-completion` (running all 34 tests across entire test suite).
+  - Task 4.1: Confirmed and inventoried all 19 creatable archive formats upstream (`XP3`, `INT`, `SAR`, `NSA`, `RPA`, `YPF`, `YKC`, `ZIP`, `MAJIRO`, `NPK`, `NPA`, `NPA-SG`, `ARC/Will`, `ARC/WillV2`, `AMI`, `XFL`, `PD`, `DAT/EGO/1`, `PAK/HyPack`).
+  - Task 4.2: Implemented bridge command `create` in `bridge/Program.cs` supporting target format lookup by tag or extension, relative path resolution, atomic temp file creation, and error reporting. Built `GarexBridge.exe` via `tools/build_bridge.ps1`.
+  - Task 4.3: Implemented public API functions in `src/garex/api.py`:
+    - `create_archive(path, files, format="auto", backend="auto", base_dir=None)`: supports directory trees, path lists, or mapping dicts.
+    - `replace_entries(source_archive, output_archive, replacements, backend="auto")`: enforces copy-modify-write, never mutating the original archive in place.
+    - Exported functions in `src/garex/__init__.py`.
+  - Task 4.4: Implemented comprehensive round-trip tests in `tests/integration/test_roundtrip.py` (7 tests covering ZIP creation, directory packing, roundtrip replace_entries, Ren'Py RPA format, and error validation).
+  - Task 4.5: Added CLI command `garex create <archive> <inputs...> [--format TAG] [--base-dir DIR]` in `src/garex/cli.py`.
+  - Updated `bridge/README.md`, `docs/04_TASKS.md`, `docs/03_ROADMAP.md`, `CHANGELOG.md`, and `pyproject.toml` (registered `bridge` pytest marker).
+- Files created/changed:
+  - `bridge/Program.cs`, `bridge/README.md`
+  - `tools/build_bridge.ps1`
+  - `src/garex/backends/base.py`, `src/garex/backends/bridge.py`
+  - `src/garex/api.py`, `src/garex/__init__.py`, `src/garex/cli.py`
+  - `tests/integration/test_roundtrip.py`, `tests/unit/test_router.py`
+  - `pyproject.toml`, `docs/04_TASKS.md`, `docs/03_ROADMAP.md`, `CHANGELOG.md`, `PROGRESS.md`
+- Tests run and results: 34 passed in pytest (100% pass rate).
+- Decisions made: Enforce safe copy-modify-write workflow preventing accidental corruption of original visual novel archives.
+- Next steps: Phase 5 (Native ports, tasks 5.0 - 5.n).
 
 

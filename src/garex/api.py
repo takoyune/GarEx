@@ -275,3 +275,149 @@ def convert_audio(
     b.convert_audio(src_path, dest_path, format=format)
     return dest_path
 
+
+def create_archive(
+    path: str | Path,
+    files: Sequence[str | Path] | Mapping[str, str | Path] | str | Path,
+    format: str = "auto",
+    backend: BackendMode = "auto",
+    base_dir: str | Path | None = None,
+) -> Archive:
+    """Create a new game resource archive containing the specified files.
+
+    Args:
+        path: Destination path for the new archive.
+        files: Files to include in the archive. Can be:
+            - A directory path: all files inside are recursively packed preserving relative subpaths.
+            - A list or sequence of file paths.
+            - A mapping of {entry_name_in_archive: source_file_path_on_disk}.
+        format: Target archive format tag (e.g. 'ZIP', 'RPA', 'XP3', 'INT').
+            Defaults to 'auto' (inferred from destination file extension).
+        backend: Backend selection ('auto', 'bridge', or 'native').
+        base_dir: Optional base directory to resolve relative file paths against.
+
+    Returns:
+        Opened Archive instance for the newly created archive.
+    """
+    import shutil
+    import tempfile
+    from collections.abc import Mapping, Sequence
+    from garex.backends.bridge import BridgeBackend
+
+    dest_path = Path(path).resolve()
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+    b = BridgeBackend()
+
+    # Case 1: A directory path was provided
+    if isinstance(files, (str, Path)):
+        src_dir = Path(files).resolve()
+        if not src_dir.is_dir():
+            raise FileNotFoundError(f"Source directory not found: {src_dir}")
+        entry_list = [
+            str(p.relative_to(src_dir)).replace("\\", "/")
+            for p in src_dir.rglob("*")
+            if p.is_file()
+        ]
+        b.create_archive(dest_path, entry_list, base_dir=src_dir, format=format)
+        return open_archive(dest_path, backend=backend)
+
+    # Case 2: A mapping of entry_name -> source_file was provided
+    if isinstance(files, Mapping):
+        with tempfile.TemporaryDirectory() as stage_dir:
+            stage_path = Path(stage_dir)
+            entry_list = []
+            for entry_name, src_file in files.items():
+                norm_name = entry_name.replace("\\", "/").lstrip("/")
+                target = stage_path / norm_name
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(Path(src_file), target)
+                entry_list.append(norm_name)
+
+            b.create_archive(dest_path, entry_list, base_dir=stage_path, format=format)
+        return open_archive(dest_path, backend=backend)
+
+    # Case 3: A sequence of file paths
+    file_list = list(files)
+    if not file_list:
+        raise ValueError("Cannot create an archive with an empty file list")
+
+    if base_dir is not None:
+        effective_base = Path(base_dir).resolve()
+        entry_list = [
+            str(Path(p).resolve().relative_to(effective_base)).replace("\\", "/")
+            if Path(p).is_absolute()
+            else str(p).replace("\\", "/")
+            for p in file_list
+        ]
+        b.create_archive(dest_path, entry_list, base_dir=effective_base, format=format)
+    else:
+        # Stage into temp directory to ensure uniform structure
+        with tempfile.TemporaryDirectory() as stage_dir:
+            stage_path = Path(stage_dir)
+            entry_list = []
+            for item in file_list:
+                item_path = Path(item).resolve()
+                if not item_path.is_file():
+                    raise FileNotFoundError(f"Source file not found: {item_path}")
+                norm_name = item_path.name
+                target = stage_path / norm_name
+                shutil.copyfile(item_path, target)
+                entry_list.append(norm_name)
+
+            b.create_archive(dest_path, entry_list, base_dir=stage_path, format=format)
+
+    return open_archive(dest_path, backend=backend)
+
+
+def replace_entries(
+    source_archive: str | Path,
+    output_archive: str | Path,
+    replacements: Mapping[str, str | Path],
+    backend: BackendMode = "auto",
+) -> Archive:
+    """Repack an archive by replacing specific entries (copy-modify-write workflow).
+
+    Enforces safe file operations: NEVER modifies the source archive in place;
+    always creates a new output archive.
+
+    Args:
+        source_archive: Path to the original source archive.
+        output_archive: Path to the new repacked archive.
+        replacements: Mapping of {entry_name_in_archive: path_to_replacement_file}.
+        backend: Backend selection ('auto', 'bridge', or 'native').
+
+    Returns:
+        Opened Archive instance for the newly repacked archive.
+    """
+    import shutil
+    import tempfile
+
+    src_path = Path(source_archive).resolve()
+    out_path = Path(output_archive).resolve()
+
+    if src_path == out_path:
+        raise ValueError("output_archive must be different from source_archive (copy-modify-write)")
+    if not src_path.is_file():
+        raise FileNotFoundError(f"Source archive not found: {src_path}")
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_path = Path(tmp_dir)
+
+        # 1. Extract all existing entries into temporary staging directory
+        with open_archive(src_path, backend=backend) as src_arc:
+            arc_format = src_arc.format
+            src_arc.extract_all(tmp_path)
+
+        # 2. Apply replacements
+        for entry_name, rep_path in replacements.items():
+            rep_file = Path(rep_path).resolve()
+            if not rep_file.is_file():
+                raise FileNotFoundError(f"Replacement file not found: {rep_file}")
+            target_entry = sanitize_entry_path(tmp_path, entry_name)
+            target_entry.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(rep_file, target_entry)
+
+        # 3. Create output archive from staged files
+        return create_archive(out_path, tmp_path, format=arc_format, backend=backend)
+

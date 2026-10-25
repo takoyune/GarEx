@@ -2,7 +2,15 @@
 
 from __future__ import annotations
 
-from garex.api import Archive, convert_audio, convert_image, open_archive, supported_formats
+from garex.api import (
+    Archive,
+    convert_audio,
+    convert_image,
+    create_archive,
+    open_archive,
+    replace_entries,
+    supported_formats,
+)
 from garex.errors import (
     BridgeError,
     BridgeNotFoundError,
@@ -20,6 +28,8 @@ __version__ = "0.1.0"
 __all__ = [
     "__version__",
     "open_archive",
+    "create_archive",
+    "replace_entries",
     "supported_formats",
     "convert_image",
     "convert_audio",

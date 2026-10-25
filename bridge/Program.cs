@@ -114,6 +114,10 @@ namespace GarexBridge
                     HandleConvertAudio(id, args);
                     break;
 
+                case "create":
+                    HandleCreate(id, args);
+                    break;
+
                 default:
                     WriteError(id, "UNKNOWN_COMMAND", "Unrecognized command: " + cmd);
                     break;
@@ -609,6 +613,144 @@ namespace GarexBridge
             catch (Exception ex)
             {
                 WriteError(id, "CONVERT_FAILED", ex.Message);
+            }
+        }
+
+        static void HandleCreate(string id, Dictionary<string, object> args)
+        {
+            if (!args.ContainsKey("path") || args["path"] == null)
+            {
+                WriteError(id, "INVALID_ARGUMENTS", "Missing required argument 'path'");
+                return;
+            }
+            if (!args.ContainsKey("files") || args["files"] == null)
+            {
+                WriteError(id, "INVALID_ARGUMENTS", "Missing required argument 'files'");
+                return;
+            }
+
+            string fullDest = Path.GetFullPath(args["path"].ToString());
+            string destDir = Path.GetDirectoryName(fullDest);
+            if (string.IsNullOrEmpty(destDir))
+                destDir = Directory.GetCurrentDirectory();
+            else if (!Directory.Exists(destDir))
+                Directory.CreateDirectory(destDir);
+
+            string formatTag = args.ContainsKey("format") && args["format"] != null ? args["format"].ToString().Trim() : "";
+            var catalog = FormatCatalog.Instance;
+            ArchiveFormat targetFormat = null;
+
+            if (!string.IsNullOrEmpty(formatTag) && !formatTag.Equals("auto", StringComparison.OrdinalIgnoreCase))
+            {
+                targetFormat = catalog.ArcFormats.FirstOrDefault(f => f.Tag.Equals(formatTag, StringComparison.OrdinalIgnoreCase));
+                if (targetFormat == null)
+                {
+                    WriteError(id, "UNSUPPORTED_FORMAT", "No archive format found with tag: " + formatTag);
+                    return;
+                }
+            }
+            else
+            {
+                string ext = Path.GetExtension(fullDest).TrimStart('.').ToLowerInvariant();
+                var candidates = catalog.LookupExtension<ArchiveFormat>(ext);
+                targetFormat = candidates.FirstOrDefault(f => f.CanWrite);
+                if (targetFormat == null)
+                    targetFormat = candidates.FirstOrDefault();
+                if (targetFormat == null)
+                {
+                    WriteError(id, "UNSUPPORTED_FORMAT", "Could not infer archive format for extension: " + ext);
+                    return;
+                }
+            }
+
+            if (!targetFormat.CanWrite)
+            {
+                WriteError(id, "FORMAT_NOT_CREATABLE", "Archive format '" + targetFormat.Tag + "' does not support creating archives.");
+                return;
+            }
+
+            string baseDir = args.ContainsKey("base_dir") && args["base_dir"] != null ? args["base_dir"].ToString() : "";
+            if (!string.IsNullOrEmpty(baseDir))
+            {
+                baseDir = Path.GetFullPath(baseDir);
+            }
+
+            var rawFiles = args["files"] as ArrayList;
+            if (rawFiles == null)
+            {
+                WriteError(id, "INVALID_ARGUMENTS", "'files' must be an array of file entry paths");
+                return;
+            }
+
+            var entryList = new List<Entry>();
+            string origDir = Directory.GetCurrentDirectory();
+            string tmpFile = null;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(baseDir) && Directory.Exists(baseDir))
+                {
+                    Directory.SetCurrentDirectory(baseDir);
+                }
+
+                foreach (var item in rawFiles)
+                {
+                    string entryName = item != null ? item.ToString() : "";
+                    if (string.IsNullOrWhiteSpace(entryName))
+                        continue;
+
+                    entryName = entryName.TrimStart('\\', '/');
+                    var fileInfo = new FileInfo(entryName);
+                    if (!fileInfo.Exists)
+                    {
+                        WriteError(id, "FILE_NOT_FOUND", "Source file not found: " + entryName);
+                        return;
+                    }
+
+                    var entry = targetFormat.Create<Entry>(entryName);
+                    entry.Size = (uint)fileInfo.Length;
+                    entryList.Add(entry);
+                }
+
+                if (entryList.Count == 0)
+                {
+                    WriteError(id, "INVALID_ARGUMENTS", "Cannot create an empty archive; no valid files supplied");
+                    return;
+                }
+
+                ResourceOptions options = targetFormat.GetDefaultOptions();
+
+                tmpFile = Path.Combine(destDir, Path.GetRandomFileName() + ".tmp");
+                using (var outputStream = File.Create(tmpFile))
+                {
+                    targetFormat.Create(outputStream, entryList, options, (count, entry, msg) => ArchiveOperation.Continue);
+                }
+
+                if (File.Exists(fullDest))
+                {
+                    File.Delete(fullDest);
+                }
+                File.Move(tmpFile, fullDest);
+                tmpFile = null;
+
+                WriteSuccess(id, new Dictionary<string, object>
+                {
+                    { "format", targetFormat.Tag },
+                    { "path", fullDest },
+                    { "entries_count", entryList.Count }
+                });
+            }
+            catch (Exception ex)
+            {
+                if (!string.IsNullOrEmpty(tmpFile) && File.Exists(tmpFile))
+                {
+                    try { File.Delete(tmpFile); } catch {}
+                }
+                WriteError(id, "CREATE_FAILED", ex.Message);
+            }
+            finally
+            {
+                Directory.SetCurrentDirectory(origDir);
             }
         }
 

@@ -60,6 +60,15 @@ class FakeBackend(BaseBackend):
     ) -> dict[str, Any]:
         return {"sample_rate": 44100, "channels": 2, "target_format": format.upper()}
 
+    def create_archive(
+        self,
+        path: Path,
+        files: list[str],
+        base_dir: Path | None = None,
+        format: str | None = None,
+    ) -> dict[str, Any]:
+        return {"format": format or "FAKE", "path": str(path), "entries_count": len(files)}
+
 
 
 

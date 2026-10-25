@@ -59,4 +59,14 @@ class BaseBackend(ABC):
     ) -> dict[str, Any]:
         """Convert a standalone visual novel audio track to standard format."""
 
+    @abstractmethod
+    def create_archive(
+        self,
+        path: Path,
+        files: list[str],
+        base_dir: Path | None = None,
+        format: str | None = None,
+    ) -> dict[str, Any]:
+        """Create an archive from a list of files."""
+
 

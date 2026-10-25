@@ -33,7 +33,7 @@ Exit criteria: `extract`, `extract_all` work (bridge); progress callback; safe p
 Exit criteria: `convert_image`, `convert_audio`, and `extract_all(convert=True)` work for the
 formats GARbro converts; output compared against GARbro outputs.
 
-## Phase 4 - Create / repack  | Status: NOT STARTED
+## Phase 4 - Create / repack  | Status: COMPLETED
 Exit criteria: `create_archive` and in-place replace workflow work for formats GARbro can create;
 round-trip test (extract -> modify -> repack -> open in garex AND verify with GARbro) passes.
 

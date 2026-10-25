@@ -47,6 +47,9 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Ported second native format: KiriKiri 2 / KAG3 (`XP3`) decoder and creator in `src/garex/backends/native/formats/xp3.py` with 100% byte and metadata parity against GARbro (Task 5.3).
 - Technical format specification `docs/formats/XP3.md` based on reverse-engineered `vendor/GARbro/ArcFormats/KiriKiri/ArcXP3.cs`.
 - Integration and differential test suite in `tests/integration/test_native_xp3.py` expanding test suite to 40 tests passing at 100% pass rate.
+- Ported third native format: CatSystem2 (`INT`) decoder and creator in `src/garex/backends/native/formats/int.py` with 100% byte and metadata parity against GARbro (Task 5.4).
+- Technical format specification `docs/formats/INT.md` based on reverse-engineered `vendor/GARbro/ArcFormats/CatSystem/ArcINT.cs`.
+- Integration and differential test suite in `tests/integration/test_native_int.py` expanding test suite to 43 tests passing at 100% pass rate.
 - Ergonomic aliases added to `BinaryReader`: `read_bytes`, `read_u16`, `read_i16`, `read_u32`, `read_i32`, `read_u64`, `read_i64`.
 - Auto-loading of native formats upon any registry access via `ensure_formats_loaded()`.
 
@@ -55,8 +58,8 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Updated `docs/06_FORMAT_PORTING_GUIDE.md` integrating reverse-engineering and TDD skills into the format porting steps.
 - Updated `reference/GARBRO_REPO_MAP.md` filling all verified repository facts and answering architectural questions (Phase 0 Task 0.5).
 - Updated `docs/02_ARCHITECTURE.md` with answers regarding format discovery (MEF), encryption/scheme storage (`Formats.dat`), WPF dependencies, and archive sizes (Phase 0 Task 0.6, 0.8).
-- Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, `docs/ENGINE_STATUS.md`, and `PROGRESS.md` reflecting completed status for Task 5.3 (KiriKiri XP3).
-- Updated `docs/10_FORMAT_TRACKER.md` setting status of `XP3` to `native`.
+- Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, `docs/ENGINE_STATUS.md`, and `PROGRESS.md` reflecting completed status for Task 5.3 (XP3) and Task 5.4 (INT).
+- Updated `docs/10_FORMAT_TRACKER.md` setting status of `XP3` and `INT` to `native`.
 - Updated `bridge/README.md` reflecting fully implemented bridge commands (`probe`, `list`, `formats`, `extract`, `convert_image`, `convert_audio`, `create`) and documenting build instructions.
 - Configured `garex.create_archive` to dynamically route creation to `NativeBackend` when a native format with write capability is available.
 

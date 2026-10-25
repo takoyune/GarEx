@@ -53,7 +53,7 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 - [x] 5.1 Build native infrastructure: `backends/native/base.py`, registry, binary reader helpers, differential test harness `tools/difftest.py`.
 - [x] 5.2 Port first format end-to-end as a reference implementation (Ported Ren'Py RPA-3.0 in `backends/native/formats/rpa.py`, 100% byte parity verified).
 - [x] 5.3 Port second format: KiriKiri (`XP3`) (Pure Python decoder and creator in `backends/native/formats/xp3.py`, 100% byte and metadata parity verified in differential tests against GARbro bridge).
-- [ ] 5.4 Port third format: CatSystem2 (`INT`).
+- [x] 5.4 Port third format: CatSystem2 (`INT`) (Pure Python decoder and creator in `backends/native/formats/int.py`, 100% byte and metadata parity verified in differential tests against GARbro bridge).
 - [ ] 5.5 Port fourth format: NScripter (`SAR`/`NSA`).
 - [ ] 5.n Port further formats. One task per format; link to tracker row.
 

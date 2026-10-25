@@ -10,8 +10,8 @@ Format  : See the template below.
 ## Current state (overwrite this block each session)
 
 - Current phase: Phase 5 (Native ports)
-- Last completed task: 5.3 in docs/04_TASKS.md (KiriKiri XP3 native port completed with 100% parity)
-- Next task: 5.4 in docs/04_TASKS.md (Port third format: CatSystem2 INT)
+- Last completed task: 5.4 in docs/04_TASKS.md (CatSystem2 INT native port completed with 100% parity)
+- Next task: 5.5 in docs/04_TASKS.md (Port fourth format: NScripter SAR/NSA)
 - Blockers / questions for the human: none
 
 ## Session entries (append only)
@@ -170,6 +170,26 @@ Format  : See the template below.
 - Tests run and results: 40/40 tests passing (100% pass rate in pytest).
 - Decisions made: Set `RetainDirs = true` when creating XP3 archives to ensure directory structures within subdirectories are preserved cleanly.
 - Next steps: Task 5.4 (Port third format: CatSystem2 `INT`).
+
+### Session 2026-10-25 (Phase 5 - Task 5.4 CatSystem2 INT Port)
+- Phase / tasks worked on: Phase 5 Task 5.4 (Port third format: CatSystem2 `INT` - COMPLETED).
+- What was done:
+  - Applied specialized agent skills:
+    - `reverse-engineer-anything`: Reverse-engineered `vendor/GARbro/ArcFormats/CatSystem/ArcINT.cs`. Documented `KIF\x00` signature, 72-byte entry layout (`0x48`), 64-byte CP932 / Shift-JIS name fields, uint32 offsets and sizes, and sequential uncompressed data payload in `docs/formats/INT.md`.
+    - `tdd-workflow`: Created comprehensive integration and differential test suite in `tests/integration/test_native_int.py` verifying roundtrip reading, creating, and bi-directional cross-compatibility against GARbro bridge.
+    - `verification-before-completion`: Verified 100% byte and metadata parity using `tools/difftest.py` comparing all extracted file bytes and SHA-256 hashes against `BridgeBackend`.
+  - Implemented pure Python reader and creator in `src/garex/backends/native/formats/int.py`.
+  - Updated `docs/ENGINE_STATUS.md` and `docs/10_FORMAT_TRACKER.md` reflecting `INT` as complete native format.
+  - Test suite expanded to 43 passed tests (100% pass rate).
+- Files created/changed:
+  - `docs/formats/INT.md`
+  - `src/garex/backends/native/formats/int.py`
+  - `tests/integration/test_native_int.py`
+  - `docs/ENGINE_STATUS.md`, `docs/10_FORMAT_TRACKER.md`, `docs/04_TASKS.md`, `CHANGELOG.md`, `PROGRESS.md`
+- Tests run and results: 43/43 tests passing (100% pass rate in pytest).
+- Decisions made: Support both 64-byte (standard v2) and 32-byte (legacy v1) directory entry name layouts during probing and listing.
+- Next steps: Task 5.5 (Port fourth format: NScripter `SAR`/`NSA`).
+
 
 
 

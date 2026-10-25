@@ -266,7 +266,7 @@ Rule    : Never mark `native` without a passing differential test.
 | `IKS` | archive | iks | `GameRes.Formats.X.IksOpener` | yes | - | - | bridge | X[iks] resource archive |
 | `IKURA/GDL` | archive |  | `GameRes.Formats.Ikura.MpxOpener` | yes | - | - | bridge | IKURA GDL resource archive |
 | `IMP` | archive | imp | `GameRes.Formats.BlackRainbow.ImpOpener` | yes | - | - | bridge | BlackRainbow image archive |
-| `INT` | archive | int | `GameRes.Formats.CatSystem.IntOpener` | yes | - | yes | bridge | CatSystem2 engine resource archive |
+| `INT` | archive | int | `GameRes.Formats.CatSystem.IntOpener` | yes | - | yes | native | CatSystem2 engine resource archive |
 | `IPQ` | archive | ipq | `GameRes.Formats.TechnoBrain.IpqOpener` | yes | - | - | bridge | TechnoBrain's animation resource |
 | `ISA` | archive | isa | `GameRes.Formats.ISM.IsaOpener` | yes | - | - | bridge | ISM engine resource archive |
 | `KAR` | archive | bin | `GameRes.Formats.Cadath.KarOpener` | yes | - | - | bridge | Cadath resource archive |

@@ -85,12 +85,18 @@ class Archive:
         self,
         entry_or_name: Entry | str,
         destination: str | Path = ".",
+        convert: bool = False,
+        image_format: str = "png",
+        audio_format: str = "wav",
     ) -> Path:
         """Extract a single archive entry to destination directory.
 
         Args:
             entry_or_name: Entry instance or entry filename string.
             destination: Target directory to extract to.
+            convert: Automatically convert images/audio to standard formats.
+            image_format: Target image format (default: 'png').
+            audio_format: Target audio format (default: 'wav').
 
         Returns:
             Path to the extracted file.
@@ -105,18 +111,33 @@ class Archive:
         dest_path = Path(destination).resolve()
         safe_target = sanitize_entry_path(dest_path, entry_name)
         dest_path.mkdir(parents=True, exist_ok=True)
-        self._backend.extract(self.path, dest_path, entry=entry_name)
+        res = self._backend.extract(
+            self.path,
+            dest_path,
+            entry=entry_name,
+            convert=convert,
+            image_format=image_format,
+            audio_format=audio_format,
+        )
+        if res and res.get("entries"):
+            return dest_path / res["entries"][0].replace("\\", "/")
         return safe_target
 
     def extract_all(
         self,
         destination: str | Path = ".",
+        convert: bool = False,
+        image_format: str = "png",
+        audio_format: str = "wav",
         progress_callback: Callable[[int, int, Entry], None] | None = None,
     ) -> list[Path]:
         """Extract all entries contained within this archive to destination.
 
         Args:
             destination: Target directory to extract to.
+            convert: Automatically convert images/audio to standard formats.
+            image_format: Target image format (default: 'png').
+            audio_format: Target audio format (default: 'wav').
             progress_callback: Optional callback receiving (index, total, entry).
 
         Returns:
@@ -132,14 +153,28 @@ class Archive:
         for entry in self._entries:
             sanitize_entry_path(dest_path, entry.name)
 
-        self._backend.extract(self.path, dest_path, entry=None)
+        res = self._backend.extract(
+            self.path,
+            dest_path,
+            entry=None,
+            convert=convert,
+            image_format=image_format,
+            audio_format=audio_format,
+        )
         extracted: list[Path] = []
-        for i, entry in enumerate(self._entries):
-            target = dest_path / entry.name.replace("\\", "/")
-            extracted.append(target)
-            if progress_callback:
+        if res and res.get("entries"):
+            for e_name in res["entries"]:
+                extracted.append(dest_path / e_name.replace("\\", "/"))
+        else:
+            for entry in self._entries:
+                target = dest_path / entry.name.replace("\\", "/")
+                extracted.append(target)
+
+        if progress_callback:
+            for i, entry in enumerate(self._entries):
                 progress_callback(i + 1, len(self._entries), entry)
         return extracted
+
 
 
 
@@ -179,3 +214,64 @@ def supported_formats(backend: BackendMode = "auto") -> list[FormatInfo]:
         List of FormatInfo objects describing tags, extensions, and capabilities.
     """
     return get_all_supported_formats(mode=backend)
+
+
+def convert_image(
+    path: str | Path,
+    destination: str | Path,
+    format: str = "png",
+    backend: BackendMode = "auto",
+) -> Path:
+    """Convert a visual novel image to standard format (PNG, BMP, JPEG, etc.).
+
+    Args:
+        path: Path to source image file.
+        destination: Path to write the converted image file.
+        format: Target format extension or tag (default: 'png').
+        backend: Backend mode ('auto', 'bridge', or 'native').
+
+    Returns:
+        Path to the converted image.
+    """
+    from garex.backends.bridge import BridgeBackend
+
+    src_path = Path(path).resolve()
+    if not src_path.is_file():
+        raise FileNotFoundError(f"Source image not found: {src_path}")
+    dest_path = Path(destination).resolve()
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+    b = BridgeBackend()
+    b.convert_image(src_path, dest_path, format=format)
+    return dest_path
+
+
+def convert_audio(
+    path: str | Path,
+    destination: str | Path,
+    format: str = "wav",
+    backend: BackendMode = "auto",
+) -> Path:
+    """Convert a visual novel audio file to standard format (WAV).
+
+    Args:
+        path: Path to source audio file.
+        destination: Path to write the converted audio file.
+        format: Target format extension or tag (default: 'wav').
+        backend: Backend mode ('auto', 'bridge', or 'native').
+
+    Returns:
+        Path to the converted audio.
+    """
+    from garex.backends.bridge import BridgeBackend
+
+    src_path = Path(path).resolve()
+    if not src_path.is_file():
+        raise FileNotFoundError(f"Source audio not found: {src_path}")
+    dest_path = Path(destination).resolve()
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+    b = BridgeBackend()
+    b.convert_audio(src_path, dest_path, format=format)
+    return dest_path
+

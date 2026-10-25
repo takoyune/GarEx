@@ -106,6 +106,14 @@ namespace GarexBridge
                     HandleExtract(id, args);
                     break;
 
+                case "convert_image":
+                    HandleConvertImage(id, args);
+                    break;
+
+                case "convert_audio":
+                    HandleConvertAudio(id, args);
+                    break;
+
                 default:
                     WriteError(id, "UNKNOWN_COMMAND", "Unrecognized command: " + cmd);
                     break;
@@ -314,29 +322,125 @@ namespace GarexBridge
                         entriesToExtract.AddRange(arc.Dir);
                     }
 
+                    bool doConvert = args.ContainsKey("convert") && Convert.ToBoolean(args["convert"]);
+                    string targetImgTag = args.ContainsKey("image_format") && args["image_format"] != null ? args["image_format"].ToString() : "PNG";
+                    string targetAudTag = args.ContainsKey("audio_format") && args["audio_format"] != null ? args["audio_format"].ToString() : "WAV";
+
+                    ImageFormat targetImgFormat = null;
+                    AudioFormat targetAudFormat = null;
+                    if (doConvert)
+                    {
+                        targetImgFormat = FormatCatalog.Instance.ImageFormats.FirstOrDefault(f => f.Tag.Equals(targetImgTag, StringComparison.OrdinalIgnoreCase))
+                            ?? FormatCatalog.Instance.LookupExtension<ImageFormat>("png").FirstOrDefault();
+                        targetAudFormat = FormatCatalog.Instance.AudioFormats.FirstOrDefault(f => f.Tag.Equals(targetAudTag, StringComparison.OrdinalIgnoreCase))
+                            ?? FormatCatalog.Instance.LookupExtension<AudioFormat>("wav").FirstOrDefault();
+                    }
+
                     var extractedEntries = new List<string>();
                     long totalBytes = 0;
 
                     foreach (var entry in entriesToExtract)
                     {
                         string normalizedEntryName = entry.Name.Replace('\\', '/').TrimStart('/');
-                        string targetPath = Path.Combine(fullDest, normalizedEntryName);
-                        string fullTargetPath = Path.GetFullPath(targetPath);
 
-                        if (!fullTargetPath.StartsWith(fullDest, StringComparison.OrdinalIgnoreCase))
+                        if (doConvert && targetImgFormat != null && (entry.Type == "image" || HasImageExtension(entry.Name)))
+                        {
+                            try
+                            {
+                                using (var decoder = arc.OpenImage(entry))
+                                {
+                                    if (decoder != null)
+                                    {
+                                        var img = decoder.Image;
+                                        string targetExt = targetImgFormat.Extensions.FirstOrDefault() ?? "png";
+                                        string convertedName = Path.ChangeExtension(normalizedEntryName, targetExt);
+                                        string targetPath = Path.Combine(fullDest, convertedName);
+                                        string fullTargetPath = Path.GetFullPath(targetPath);
+
+                                        if (!fullTargetPath.StartsWith(fullDest, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            WriteError(id, "UNSAFE_PATH", "Archive entry path escapes destination: " + entry.Name);
+                                            return;
+                                        }
+
+                                        string targetDir = Path.GetDirectoryName(fullTargetPath);
+                                        if (!string.IsNullOrEmpty(targetDir) && !Directory.Exists(targetDir))
+                                            Directory.CreateDirectory(targetDir);
+
+                                        using (var output = File.Create(fullTargetPath))
+                                        {
+                                            targetImgFormat.Write(output, img);
+                                            totalBytes += output.Length;
+                                        }
+                                        extractedEntries.Add(convertedName);
+                                        continue;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // Fall through to standard extraction
+                            }
+                        }
+
+                        if (doConvert && targetAudFormat != null && (entry.Type == "audio" || HasAudioExtension(entry.Name)))
+                        {
+                            try
+                            {
+                                using (var entryStream = arc.OpenEntry(entry))
+                                using (var binStream = new BinaryStream(entryStream, entry.Name))
+                                using (var sound = AudioFormat.Read(binStream))
+                                {
+                                    if (sound != null)
+                                    {
+                                        string targetExt = targetAudFormat.Extensions.FirstOrDefault() ?? "wav";
+                                        string convertedName = Path.ChangeExtension(normalizedEntryName, targetExt);
+                                        string targetPath = Path.Combine(fullDest, convertedName);
+                                        string fullTargetPath = Path.GetFullPath(targetPath);
+
+                                        if (!fullTargetPath.StartsWith(fullDest, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            WriteError(id, "UNSAFE_PATH", "Archive entry path escapes destination: " + entry.Name);
+                                            return;
+                                        }
+
+                                        string targetDir = Path.GetDirectoryName(fullTargetPath);
+                                        if (!string.IsNullOrEmpty(targetDir) && !Directory.Exists(targetDir))
+                                            Directory.CreateDirectory(targetDir);
+
+                                        using (var output = File.Create(fullTargetPath))
+                                        {
+                                            targetAudFormat.Write(sound, output);
+                                            totalBytes += output.Length;
+                                        }
+                                        extractedEntries.Add(convertedName);
+                                        continue;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // Fall through to standard extraction
+                            }
+                        }
+
+                        string standardTargetPath = Path.Combine(fullDest, normalizedEntryName);
+                        string fullStandardPath = Path.GetFullPath(standardTargetPath);
+
+                        if (!fullStandardPath.StartsWith(fullDest, StringComparison.OrdinalIgnoreCase))
                         {
                             WriteError(id, "UNSAFE_PATH", "Archive entry path escapes destination: " + entry.Name);
                             return;
                         }
 
-                        string targetDir = Path.GetDirectoryName(fullTargetPath);
-                        if (!string.IsNullOrEmpty(targetDir) && !Directory.Exists(targetDir))
+                        string stdDir = Path.GetDirectoryName(fullStandardPath);
+                        if (!string.IsNullOrEmpty(stdDir) && !Directory.Exists(stdDir))
                         {
-                            Directory.CreateDirectory(targetDir);
+                            Directory.CreateDirectory(stdDir);
                         }
 
                         using (var input = arc.OpenEntry(entry))
-                        using (var output = File.Create(fullTargetPath))
+                        using (var output = File.Create(fullStandardPath))
                         {
                             input.CopyTo(output);
                             totalBytes += output.Length;
@@ -365,6 +469,163 @@ namespace GarexBridge
             {
                 WriteError(id, "EXTRACT_FAILED", ex.Message);
             }
+        }
+
+        static void HandleConvertImage(string id, Dictionary<string, object> args)
+        {
+            if (!args.ContainsKey("path") || args["path"] == null)
+            {
+                WriteError(id, "INVALID_ARGUMENTS", "Missing required argument 'path'");
+                return;
+            }
+            if (!args.ContainsKey("destination") || args["destination"] == null)
+            {
+                WriteError(id, "INVALID_ARGUMENTS", "Missing required argument 'destination'");
+                return;
+            }
+
+            string path = args["path"].ToString();
+            if (!File.Exists(path))
+            {
+                WriteError(id, "FILE_NOT_FOUND", "File not found: " + path);
+                return;
+            }
+
+            string destination = args["destination"].ToString();
+            string targetTag = args.ContainsKey("format") && args["format"] != null ? args["format"].ToString() : "PNG";
+
+            ImageFormat targetFormat = FormatCatalog.Instance.ImageFormats.FirstOrDefault(f => f.Tag.Equals(targetTag, StringComparison.OrdinalIgnoreCase))
+                ?? FormatCatalog.Instance.LookupExtension<ImageFormat>(targetTag.ToLowerInvariant()).FirstOrDefault()
+                ?? FormatCatalog.Instance.LookupExtension<ImageFormat>("png").FirstOrDefault();
+
+            if (targetFormat == null || !targetFormat.CanWrite)
+            {
+                WriteError(id, "UNSUPPORTED_OUTPUT_FORMAT", "Target image format cannot be written or unsupported: " + targetTag);
+                return;
+            }
+
+            try
+            {
+                ImageData image;
+                using (var file = BinaryStream.FromFile(path))
+                {
+                    image = ImageFormat.Read(file);
+                    if (image == null)
+                    {
+                        WriteError(id, "UNSUPPORTED_FORMAT", "Image format not recognized: " + path);
+                        return;
+                    }
+                }
+
+                string fullDest = Path.GetFullPath(destination);
+                string dir = Path.GetDirectoryName(fullDest);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                using (var outfile = File.Create(fullDest))
+                {
+                    targetFormat.Write(outfile, image);
+                }
+
+                WriteSuccess(id, new Dictionary<string, object>
+                {
+                    { "width", (int)image.Width },
+                    { "height", (int)image.Height },
+                    { "bpp", image.BPP },
+                    { "target_format", targetFormat.Tag },
+                    { "destination", fullDest }
+                });
+            }
+            catch (Exception ex)
+            {
+                WriteError(id, "CONVERT_FAILED", ex.Message);
+            }
+        }
+
+        static void HandleConvertAudio(string id, Dictionary<string, object> args)
+        {
+            if (!args.ContainsKey("path") || args["path"] == null)
+            {
+                WriteError(id, "INVALID_ARGUMENTS", "Missing required argument 'path'");
+                return;
+            }
+            if (!args.ContainsKey("destination") || args["destination"] == null)
+            {
+                WriteError(id, "INVALID_ARGUMENTS", "Missing required argument 'destination'");
+                return;
+            }
+
+            string path = args["path"].ToString();
+            if (!File.Exists(path))
+            {
+                WriteError(id, "FILE_NOT_FOUND", "File not found: " + path);
+                return;
+            }
+
+            string destination = args["destination"].ToString();
+            string targetTag = args.ContainsKey("format") && args["format"] != null ? args["format"].ToString() : "WAV";
+
+            AudioFormat targetFormat = FormatCatalog.Instance.AudioFormats.FirstOrDefault(f => f.Tag.Equals(targetTag, StringComparison.OrdinalIgnoreCase))
+                ?? FormatCatalog.Instance.LookupExtension<AudioFormat>(targetTag.ToLowerInvariant()).FirstOrDefault()
+                ?? FormatCatalog.Instance.LookupExtension<AudioFormat>("wav").FirstOrDefault();
+
+            if (targetFormat == null || !targetFormat.CanWrite)
+            {
+                WriteError(id, "UNSUPPORTED_OUTPUT_FORMAT", "Target audio format cannot be written or unsupported: " + targetTag);
+                return;
+            }
+
+            try
+            {
+                string fullDest = Path.GetFullPath(destination);
+                string dir = Path.GetDirectoryName(fullDest);
+                if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                using (var file = BinaryStream.FromFile(path))
+                using (var sound = AudioFormat.Read(file))
+                {
+                    if (sound == null)
+                    {
+                        WriteError(id, "UNSUPPORTED_FORMAT", "Audio format not recognized: " + path);
+                        return;
+                    }
+
+                    using (var outfile = File.Create(fullDest))
+                    {
+                        targetFormat.Write(sound, outfile);
+                    }
+
+                    WriteSuccess(id, new Dictionary<string, object>
+                    {
+                        { "sample_rate", (int)sound.Format.SamplesPerSecond },
+                        { "channels", (int)sound.Format.Channels },
+                        { "bits_per_sample", (int)sound.Format.BitsPerSample },
+                        { "target_format", targetFormat.Tag },
+                        { "destination", fullDest }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteError(id, "CONVERT_FAILED", ex.Message);
+            }
+        }
+
+        static bool HasImageExtension(string name)
+        {
+            string ext = Path.GetExtension(name);
+            if (string.IsNullOrEmpty(ext)) return false;
+            ext = ext.TrimStart('.').ToLowerInvariant();
+            return FormatCatalog.Instance.LookupExtension<ImageFormat>(ext).Any();
+        }
+
+        static bool HasAudioExtension(string name)
+        {
+            string ext = Path.GetExtension(name);
+            if (string.IsNullOrEmpty(ext)) return false;
+            ext = ext.TrimStart('.').ToLowerInvariant();
+            return FormatCatalog.Instance.LookupExtension<AudioFormat>(ext).Any();
         }
 
         static void WriteSuccess(string id, object result)

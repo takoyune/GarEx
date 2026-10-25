@@ -35,6 +35,28 @@ class BaseBackend(ABC):
         destination: Path,
         entry: str | None = None,
         scheme: str | None = None,
+        convert: bool = False,
+        image_format: str = "PNG",
+        audio_format: str = "WAV",
     ) -> dict[str, Any]:
         """Extract one or all entries from an archive into destination directory."""
+
+    @abstractmethod
+    def convert_image(
+        self,
+        path: Path,
+        destination: Path,
+        format: str = "PNG",
+    ) -> dict[str, Any]:
+        """Convert a standalone visual novel image to standard format."""
+
+    @abstractmethod
+    def convert_audio(
+        self,
+        path: Path,
+        destination: Path,
+        format: str = "WAV",
+    ) -> dict[str, Any]:
+        """Convert a standalone visual novel audio track to standard format."""
+
 

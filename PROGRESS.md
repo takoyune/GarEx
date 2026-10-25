@@ -9,9 +9,9 @@ Format  : See the template below.
 
 ## Current state (overwrite this block each session)
 
-- Current phase: Phase 3 (Convert image/audio)
-- Last completed task: 2.5 in docs/04_TASKS.md (Phase 2 COMPLETED)
-- Next task: 3.1 in docs/04_TASKS.md (Inventory convertible formats from upstream)
+- Current phase: Phase 4 (Create / repack)
+- Last completed task: 3.5 in docs/04_TASKS.md (Phase 3 COMPLETED)
+- Next task: 4.1 in docs/04_TASKS.md (Inventory which formats upstream can create)
 - Blockers / questions for the human: none
 
 ## Session entries (append only)
@@ -69,4 +69,26 @@ Format  : See the template below.
 - Tests run and results: 21 passed in pytest (100% pass rate).
 - Decisions made: Handled path traversal prevention in both C# bridge and Python API layer.
 - Next steps: Phase 3 (Convert image/audio, tasks 3.1 - 3.5).
+
+### Session 2026-10-25 (Night)
+- Phase / tasks worked on: Phase 3 (Convert image/audio, tasks 3.1 - 3.5 - COMPLETED)
+- What was done:
+  - Applied skills: `reverse-engineer-anything` (decompiling/analyzing `Image.Convert`, `GarExtract`, and `GameRes.AudioFormat` to understand conversion workflows), `api-and-interface-design` (designing clean Python APIs `convert_image`, `convert_audio`, and `extract_all(convert=True)`), `test-driven-development` (synthetic BMP and WAV fixtures), `backend-patterns` (IPC commands `convert_image` and `convert_audio`), and `verification-before-completion` (running full test suite).
+  - Verified tracker entries for 293 convertible images and 63 convertible audio formats (Task 3.1).
+  - Implemented bridge commands `convert_image` and `convert_audio` in `bridge/Program.cs` utilizing `ImageFormat.Read`/`Write` and `AudioFormat.Read`/`Write` (Task 3.2).
+  - Added on-the-fly conversion support during archive extraction in `bridge/Program.cs` and `Archive.extract(convert=True)` / `Archive.extract_all(convert=True)` (Task 3.3).
+  - Exported `convert_image` and `convert_audio` in `src/garex/__init__.py` and `src/garex/api.py`.
+  - Added CLI `garex convert <file> -o <output>` and `garex extract --convert` in `src/garex/cli.py` (Task 3.5).
+  - Implemented 6 new integration tests in `tests/integration/test_convert.py` verifying BMP->PNG conversion, WAV conversion, archive extract with conversion, CLI conversion, and error handling (Task 3.4).
+  - Verified 100% test pass rate (27/27 tests passing).
+- Files created/changed:
+  - `bridge/Program.cs`
+  - `src/garex/backends/base.py`, `src/garex/backends/bridge.py`
+  - `src/garex/api.py`, `src/garex/__init__.py`, `src/garex/cli.py`
+  - `tests/integration/test_convert.py`, `tests/unit/test_router.py`
+  - `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, `PROGRESS.md`, `CHANGELOG.md`
+- Tests run and results: 27 passed in pytest (100% pass rate).
+- Decisions made: Audio conversion defaults to standard PCM WAV; image conversion defaults to PNG with full alpha support.
+- Next steps: Phase 4 (Create / repack, tasks 4.1 - 4.5).
+
 

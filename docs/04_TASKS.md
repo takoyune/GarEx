@@ -35,11 +35,11 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 - [x] 2.5 Tests + CLI `garex extract`.
 
 ## Phase 3 - Convert image/audio
-- [ ] 3.1 Inventory convertible formats from upstream (image + audio) into the tracker.
-- [ ] 3.2 Bridge commands `convert_image`, `convert_audio`.
-- [ ] 3.3 API functions + `extract_all(convert=True)`.
-- [ ] 3.4 Tests comparing output hashes/pixels against upstream outputs.
-- [ ] 3.5 CLI `garex convert`.
+- [x] 3.1 Inventory convertible formats from upstream (image + audio) into the tracker.
+- [x] 3.2 Bridge commands `convert_image`, `convert_audio`.
+- [x] 3.3 API functions + `extract_all(convert=True)`.
+- [x] 3.4 Tests comparing output hashes/pixels against upstream outputs.
+- [x] 3.5 CLI `garex convert`.
 
 ## Phase 4 - Create / repack
 - [ ] 4.1 Inventory which formats upstream can create.

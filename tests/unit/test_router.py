@@ -38,8 +38,28 @@ class FakeBackend(BaseBackend):
         destination: Path,
         entry: str | None = None,
         scheme: str | None = None,
+        convert: bool = False,
+        image_format: str = "PNG",
+        audio_format: str = "WAV",
     ) -> dict[str, Any]:
         return {"extracted_count": 1, "total_bytes": 100, "destination": str(destination)}
+
+    def convert_image(
+        self,
+        path: Path,
+        destination: Path,
+        format: str = "PNG",
+    ) -> dict[str, Any]:
+        return {"width": 100, "height": 100, "bpp": 32, "target_format": format.upper()}
+
+    def convert_audio(
+        self,
+        path: Path,
+        destination: Path,
+        format: str = "WAV",
+    ) -> dict[str, Any]:
+        return {"sample_rate": 44100, "channels": 2, "target_format": format.upper()}
+
 
 
 

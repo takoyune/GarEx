@@ -212,15 +212,52 @@ class BridgeBackend(BaseBackend):
         destination: Path,
         entry: str | None = None,
         scheme: str | None = None,
+        convert: bool = False,
+        image_format: str = "PNG",
+        audio_format: str = "WAV",
     ) -> dict[str, Any]:
         abs_path = Path(path).resolve()
         abs_dest = Path(destination).resolve()
         args: dict[str, Any] = {
             "path": str(abs_path),
             "destination": str(abs_dest),
+            "convert": convert,
+            "image_format": image_format.upper(),
+            "audio_format": audio_format.upper(),
         }
         if entry is not None:
             args["entry"] = entry
         if scheme is not None:
             args["scheme"] = scheme
         return self.client.send_command("extract", args)
+
+    def convert_image(
+        self,
+        path: Path,
+        destination: Path,
+        format: str = "PNG",
+    ) -> dict[str, Any]:
+        abs_path = Path(path).resolve()
+        abs_dest = Path(destination).resolve()
+        args = {
+            "path": str(abs_path),
+            "destination": str(abs_dest),
+            "format": format.upper(),
+        }
+        return self.client.send_command("convert_image", args)
+
+    def convert_audio(
+        self,
+        path: Path,
+        destination: Path,
+        format: str = "WAV",
+    ) -> dict[str, Any]:
+        abs_path = Path(path).resolve()
+        abs_dest = Path(destination).resolve()
+        args = {
+            "path": str(abs_path),
+            "destination": str(abs_dest),
+            "format": format.upper(),
+        }
+        return self.client.send_command("convert_audio", args)
+

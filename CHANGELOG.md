@@ -26,11 +26,16 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Path safety and directory traversal / Zip-Slip sanitization (`src/garex/security.py`).
 - Archive extraction engine supporting single entry and bulk extraction with progress tracking (`Archive.extract`, `Archive.extract_all`).
 - Comprehensive unit and integration test suite with 21 tests passing at 100% pass rate (`tests/`).
+- Bridge commands `convert_image` and `convert_audio` supporting 293 image formats and 63 audio formats (`bridge/Program.cs`).
+- On-the-fly conversion of visual novel images to PNG and audio to WAV during archive extraction (`Archive.extract(convert=True)`, `Archive.extract_all(convert=True)`).
+- Public standalone conversion API functions `convert_image` and `convert_audio` in `src/garex/api.py`.
+- CLI command `garex convert <file> -o <output>` and `garex extract --convert` flag in `src/garex/cli.py`.
+- Integration tests in `tests/integration/test_convert.py` expanding test suite to 27 tests passing at 100% pass rate.
 
 ### Changed
 - Updated `vendor/README.md` recording pinned commit details.
 - Updated `docs/06_FORMAT_PORTING_GUIDE.md` integrating reverse-engineering and TDD skills into the format porting steps.
 - Updated `reference/GARBRO_REPO_MAP.md` filling all verified repository facts and answering architectural questions (Phase 0 Task 0.5).
 - Updated `docs/02_ARCHITECTURE.md` with answers regarding format discovery (MEF), encryption/scheme storage (`Formats.dat`), WPF dependencies, and archive sizes (Phase 0 Task 0.6, 0.8).
-- Updated `docs/04_TASKS.md` and `PROGRESS.md` reflecting completed status for Phase 0, Phase 1, and Phase 2.
+- Updated `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, and `PROGRESS.md` reflecting completed status for Phase 0, Phase 1, Phase 2, and Phase 3.
 

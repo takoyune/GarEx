@@ -57,10 +57,49 @@ def main(argv: list[str] | None = None) -> int:
         help="Extract only the specified single entry instead of all entries.",
     )
     extract_parser.add_argument(
+        "--convert",
+        action="store_true",
+        help="Automatically convert extracted images and audio to standard formats.",
+    )
+    extract_parser.add_argument(
+        "--image-format",
+        type=str,
+        default="png",
+        help="Target format for image conversion (default: png).",
+    )
+    extract_parser.add_argument(
+        "--audio-format",
+        type=str,
+        default="wav",
+        help="Target format for audio conversion (default: wav).",
+    )
+    extract_parser.add_argument(
         "--backend",
         choices=["auto", "bridge", "native"],
         default="auto",
         help="Backend to use (default: auto).",
+    )
+
+    # convert subcommand
+    convert_parser = subparsers.add_parser("convert", help="Convert visual novel image or audio file.")
+    convert_parser.add_argument("source", type=str, help="Path to source image or audio file.")
+    convert_parser.add_argument(
+        "-o", "--output",
+        type=str,
+        required=True,
+        help="Path for converted output file.",
+    )
+    convert_parser.add_argument(
+        "--format",
+        type=str,
+        default=None,
+        help="Target format (default: deduced from output extension or 'png'/'wav').",
+    )
+    convert_parser.add_argument(
+        "--type",
+        choices=["auto", "image", "audio"],
+        default="auto",
+        help="Resource type (default: auto).",
     )
 
     args = parser.parse_args(argv)
@@ -71,7 +110,17 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "formats":
             return cmd_formats(kind=args.kind)
         if args.command == "extract":
-            return cmd_extract(args.archive, output=args.output, entry=args.entry, backend=args.backend)
+            return cmd_extract(
+                args.archive,
+                output=args.output,
+                entry=args.entry,
+                convert=args.convert,
+                image_format=args.image_format,
+                audio_format=args.audio_format,
+                backend=args.backend,
+            )
+        if args.command == "convert":
+            return cmd_convert(args.source, args.output, fmt=args.format, res_type=args.type)
     except garex.GarexError as ex:
         sys.stderr.write(f"Error: {ex}\n")
         return 1
@@ -86,24 +135,69 @@ def cmd_extract(
     archive_path: str,
     output: str = ".",
     entry: str | None = None,
+    convert: bool = False,
+    image_format: str = "png",
+    audio_format: str = "wav",
     backend: str = "auto",
 ) -> int:
     path = Path(archive_path)
     dest = Path(output)
     with garex.open_archive(path, backend=backend) as arc:  # type: ignore[arg-type]
         if entry:
-            print(f"Extracting '{entry}' from {arc.path.name} to {dest}...")
-            target = arc.extract(entry, destination=dest)
+            print(f"Extracting '{entry}' from {arc.path.name} to {dest} (convert={convert})...")
+            target = arc.extract(
+                entry,
+                destination=dest,
+                convert=convert,
+                image_format=image_format,
+                audio_format=audio_format,
+            )
             print(f"Extracted: {target}")
         else:
-            print(f"Extracting {len(arc)} entries from {arc.path.name} to {dest}...")
+            print(f"Extracting {len(arc)} entries from {arc.path.name} to {dest} (convert={convert})...")
 
             def progress(current: int, total: int, e: garex.models.Entry) -> None:
                 print(f"  [{current}/{total}] {e.name} ({e.size} bytes)")
 
-            arc.extract_all(destination=dest, progress_callback=progress)
+            arc.extract_all(
+                destination=dest,
+                convert=convert,
+                image_format=image_format,
+                audio_format=audio_format,
+                progress_callback=progress,
+            )
             print("Extraction complete.")
 
+    return 0
+
+
+def cmd_convert(
+    source_path: str,
+    output_path: str,
+    fmt: str | None = None,
+    res_type: str = "auto",
+) -> int:
+    src = Path(source_path)
+    dest = Path(output_path)
+    out_ext = dest.suffix.lower().lstrip(".")
+
+    is_audio = res_type == "audio" or out_ext in ("wav", "pmw")
+    if res_type == "auto":
+        if out_ext in ("wav", "pmw"):
+            is_audio = True
+        elif out_ext in ("png", "bmp", "jpg", "jpeg", "tga", "tiff"):
+            is_audio = False
+
+    target_fmt = fmt or (out_ext if out_ext else ("wav" if is_audio else "png"))
+
+    if is_audio:
+        print(f"Converting audio '{src.name}' -> '{dest}' (format={target_fmt.upper()})...")
+        converted = garex.convert_audio(src, dest, format=target_fmt)
+    else:
+        print(f"Converting image '{src.name}' -> '{dest}' (format={target_fmt.upper()})...")
+        converted = garex.convert_image(src, dest, format=target_fmt)
+
+    print(f"Converted: {converted}")
     return 0
 
 

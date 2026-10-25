@@ -1,0 +1,23 @@
+# FILE CONTRACT
+# Purpose : Build metadata for the `garex` package. SKELETON - finalize in Phase 0 task 0.1 / Phase 1 task 1.7 following docs/07_PACKAGING.md.
+# TODO(agent): choose backend via ADR, add platform-specific wheel config, bundle src/garex/_bridge, finalize classifiers.
+# Owner decisions: name=garex, Windows first, Python>=3.10, license MIT (confirm via ADR).
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "garex"
+version = "0.0.0"
+description = "Python library for browsing, extracting, converting and repacking visual novel game resources (port of GARbro)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = []
+
+[project.scripts]
+garex = "garex.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/garex"]

@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv*/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+bin/
+obj/
+src/garex/_bridge/
+# never commit game data or extracted assets
+samples/
+*.xp3
+*.arc
+*.pak

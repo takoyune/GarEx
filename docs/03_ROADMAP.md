@@ -8,7 +8,7 @@ Status  : FILLED. Agent only ticks the Status line of a phase when ALL exit crit
 
 Rule: finish a phase completely before starting the next. Detailed checklists: `04_TASKS.md`.
 
-## Phase 0 - Recon and setup  | Status: NOT STARTED
+## Phase 0 - Recon and setup  | Status: DONE
 Goal: understand upstream, build it on Windows, inventory formats.
 Exit criteria:
 - Upstream GARbro pinned in `vendor/` (commit hash recorded in `vendor/README.md`).

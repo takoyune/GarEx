@@ -15,7 +15,7 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 - [x] 0.6 Find how upstream registers formats (plugin discovery) and how game schemes/keys are stored. Answer in `02_ARCHITECTURE.md`.
 - [x] 0.7 Write `tools/format_inventory.py` (or C# tool) that lists every archive/image/audio/script format upstream supports; generate `docs/10_FORMAT_TRACKER.md`.
 - [x] 0.8 Check whether upstream image conversion requires WPF; document consequences.
-- [ ] 0.9 Ask the human to provide sample files per format (or confirm synthetic test generation). Record answer in PROGRESS.md.
+- [x] 0.9 Ask the human to provide sample files per format (or confirm synthetic test generation). Record answer in PROGRESS.md.
 
 ## Phase 1 - Bridge + open/list
 - [ ] 1.1 Bridge spike for ADR-004: implement `list` via helper exe AND via pythonnet; measure; decide; write ADR.

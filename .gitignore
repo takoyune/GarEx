@@ -9,7 +9,8 @@ build/
 .ruff_cache/
 bin/
 obj/
-src/garex/_bridge/
+src/garex/_bridge/*
+!src/garex/_bridge/.gitkeep
 vendor/
 # tools binaries and packages
 tools/nuget.exe

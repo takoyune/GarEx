@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added multi-platform GitHub Actions CI workflow `.github/workflows/ci.yml` testing across Python 3.10 through 3.13 on `windows-latest` and `ubuntu-latest`.
 - Redesigned and modernized `README.md` based on Best-README-Template standards: centered project shields, collapsible Table of Contents, visual novel problem statement, practical CLI/Python API snippets, high-level engine overview, and collapsible advanced capability highlights (on-the-fly conversion, enterprise path safety, differential parity).
 - Rebuilt public documentation structure in `docs/` for open-source GitHub release:
   - `docs/CONTRIBUTING.md`: Contributor and developer guide for setting up the environment, writing native format decoders, and submitting pull requests.

@@ -6,7 +6,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-2ea44f.svg?style=for-the-badge)](https://github.com/TakoYune/GarEx)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg?style=for-the-badge)](tests/)
+[![CI](https://github.com/TakoYune/GarEx/actions/workflows/ci.yml/badge.svg?style=for-the-badge)](https://github.com/TakoYune/GarEx/actions)
 
 </div>
 

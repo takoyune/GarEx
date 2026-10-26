@@ -9,8 +9,8 @@ Format  : See the template below.
 
 ## Current state (overwrite this block each session)
 
-- Current phase: Phase 5 (Native ports - Option A 100% Complete) & Phase 6 (Open-Source Launch)
-- Last completed task: 5.5 in docs/04_TASKS.md (Port fourth format: NScripter SAR/NSA - Option A 100% COMPLETE!)
+- Current phase: Phase 6 (Pre-launch Real VN Verification & Quality Engineering)
+- Last completed task: Real commercial Visual Novel archive sampling from `D:\Visual Novel` across RPA, XP3, NSA, and INT with 100% success and differential parity
 - Next task: 6.3 in docs/04_TASKS.md (Create GitHub Actions CI workflow and verify wheel packaging)
 - Blockers / questions for the human: none
 
@@ -238,6 +238,41 @@ Format  : See the template below.
 - Tests run and results: 49/49 tests passing (100% pass rate in pytest).
 - Decisions made: Enforce full directory table validation during probing in `SarFormat` and `NsaFormat` to ensure SAR and NSA archives are mutually exclusive and never misidentified.
 - Next steps: Phase 6 Task 6.3 (Create GitHub Actions CI workflow) and prepare first public GitHub release.
+
+### Session 2026-10-26 (Real Commercial Visual Novel Archive Sampling from D:\Visual Novel)
+- Phase / tasks worked on: Pre-launch Real VN Archive Sampling & Quality Engineering.
+- What was done:
+  - Developed and executed automated sampling tool `tools/test_real_vns.py` scanning real commercial visual novel archives across `D:\Visual Novel`.
+  - Tested **Ren'Py (`RPA`)**:
+    - `audios.rpa` (72.65 MB, 144 files): opened in 0.024s, extracted OGG audio in 0.003s.
+    - `images.rpa` (1,000.98 MB / 1 GB, 1,308 files): opened in 0.004s, extracted PNG images in 0.007s.
+    - `scripts.rpa` (0.96 MB, 41 files): opened in 0.002s, extracted RPYC scripts in 0.002s.
+  - Tested **KiriKiri (`XP3`)**:
+    - `babel45\plugin.xp3` (1.75 MB, 26 files): opened in 0.002s, extracted plugin DLLs in 0.003s.
+    - `babel45\data.xp3` (754.15 MB, 1,420 files): opened in 0.017s, extracted protected entries and OGG audio in 0.018s.
+    - `doinaka_brother_en\data.xp3` (1,019.73 MB / 1.02 GB, 1,833 files): opened in 0.018s, extracted TJS scripts in 0.020s.
+  - Tested **NScripter (`NSA`)**:
+    - `Antique\PLANEKO\arc.nsa` (489.49 MB, 5,810 files): opened in 0.093s, extracted TXT scripts in 0.068s and compressed OGG audio in 0.071s.
+  - Tested **CatSystem2 (`INT`)**:
+    - `ガールズ・ブック・メイカー\config.int`, `bgm.int`, `bgv.int`: Correctly identified Frontwing Blowfish+MersenneTwister encrypted archives (`__key__.dat` signature) and raised `EncryptedArchiveError` with actionable key instructions.
+  - Verified **100% Differential Parity Between Native and Bridge**:
+    - Ran differential comparison between pure-Python Native backend and C# Bridge backend on commercial `plugin.xp3`, verifying identical 26 entries, identical names, and identical sizes.
+  - Fixed Windows filesystem edge cases discovered during real-game testing:
+    - In `src/garex/security.py`: Added replacement of invalid Windows filename characters (`< > : " / \ | ? *`) and length truncation for path components > 200 chars to prevent Win32 `OSError: [Errno 22] Invalid argument` on warning entries (such as the 356-char warning file in KiriKiri archives).
+    - In `src/garex/backends/router.py`: Prevented auto-backend resolution from swallowing `EncryptedArchiveError`.
+  - Added new path safety unit tests in `tests/unit/test_path_safety.py`, expanding the test suite to **51 passed tests (100% pass rate in 15.73s)**.
+- Files created/changed:
+  - `tools/test_real_vns.py`
+  - `src/garex/security.py`
+  - `src/garex/backends/native/formats/int.py`
+  - `src/garex/backends/router.py`
+  - `tests/unit/test_path_safety.py`
+  - `CHANGELOG.md`, `PROGRESS.md`
+- Tests run and results:
+  - Real archive sampling: 8 real commercial VN archives tested successfully.
+  - Full test suite: 51/51 tests passing (100% pass rate in 15.73s).
+- Next steps: Phase 6 Task 6.3 (Create GitHub Actions CI workflow for Windows + Linux) and prepare first public GitHub release under TakoYune.
+
 
 
 

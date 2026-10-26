@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING, Literal
 
 from garex.backends.base import BaseBackend
 from garex.backends.bridge import BridgeBackend
-from garex.errors import UnsupportedFormatError
+from garex.errors import EncryptedArchiveError, UnsupportedFormatError
 
 if TYPE_CHECKING:
     from garex.models import ArchiveInfo, Entry, FormatInfo
@@ -69,6 +69,8 @@ def route_archive(
             if res:
                 info, entries = native.list_entries(path)
                 return native, info, entries
+        except EncryptedArchiveError:
+            raise
         except Exception:
             pass  # Fall back to bridge
 

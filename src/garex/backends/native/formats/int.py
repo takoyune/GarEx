@@ -13,7 +13,7 @@ from typing import BinaryIO, ClassVar
 
 from garex.backends.native.base import NativeFormat, register_format
 from garex.backends.native.binary import BinaryReader
-from garex.errors import CorruptArchiveError
+from garex.errors import CorruptArchiveError, EncryptedArchiveError
 from garex.models import ArchiveInfo, Entry
 
 INT_SIGNATURE = b"KIF\x00"  # 0x0046494B
@@ -68,6 +68,12 @@ class IntFormat(NativeFormat):
         count = reader.read_i32()
         if count <= 0:
             raise CorruptArchiveError(f"Invalid entry count {count} in CatSystem2 archive")
+
+        reader.seek(8)
+        if reader.read_bytes(12).startswith(b"__key__.dat\x00"):
+            raise EncryptedArchiveError(
+                "CatSystem2 INT archive is encrypted (Frontwing scheme requiring game encryption key)"
+            )
 
         # CatSystem uses either 0x40 (standard v2) or 0x20 (legacy v1) name buffer length
         for name_len in (0x40, 0x20):

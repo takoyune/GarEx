@@ -48,3 +48,27 @@ def test_sanitize_entry_path_rejects_unc_and_drive_letters(tmp_path: Path) -> No
 
     with pytest.raises(UnsafePathError, match="escape destination"):
         sanitize_entry_path(dest, r"D:\test.txt")
+
+
+def test_sanitize_entry_path_cleans_invalid_chars(tmp_path: Path) -> None:
+    dest = tmp_path / "output"
+    dest.mkdir()
+
+    # Asterisk, question mark, colon, pipe
+    safe = sanitize_entry_path(dest, "folder/file*with?invalid:chars|.png")
+    assert "?" not in safe.name
+    assert "*" not in safe.name
+    assert ":" not in safe.name
+    assert "|" not in safe.name
+    assert safe.name.endswith(".png")
+
+
+def test_sanitize_entry_path_truncates_long_filename(tmp_path: Path) -> None:
+    dest = tmp_path / "output"
+    dest.mkdir()
+
+    long_name = "a" * 350 + ".txt"
+    safe = sanitize_entry_path(dest, long_name)
+    assert len(safe.name) <= 200
+    assert safe.name.endswith(".txt")
+

@@ -8,9 +8,17 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 
 ## [Unreleased]
 ### Added
+- Real-world visual novel archive testing tool `tools/test_real_vns.py` scanning commercial games across `D:\Visual Novel` and validating native opening, listing, entry sampling, and extraction speed.
+- Comprehensive filesystem path sanitization unit tests in `tests/unit/test_path_safety.py` covering Windows invalid character replacement and path component length truncation (expanding test suite to 51 tests at 100% pass rate).
 - Pure Python NScripter SAR and NSA archive decoders and creators in `src/garex/backends/native/formats/nscripter.py` with 100% differential parity, completing Option A Native format pipeline (Phase 5 Task 5.5). Includes MSB-first bitstream reader, Okumura LZSS decompression, SPB 24-bit bitmap decoding, and NBZ bzip2 decompression.
 - Comprehensive integration and differential test suite in `tests/integration/test_native_nscripter.py` expanding test suite to 49 passed tests (100% pass rate).
 - Technical specification for NScripter SAR and NSA archive formats in `docs/formats/NSCRIPTER.md`.
+
+### Fixed
+- Enhanced `sanitize_entry_path` in `src/garex/security.py` to strip/replace Windows invalid filename characters (`< > : " / \ | ? *`) with `_` and truncate path components exceeding 200 characters while preserving file extensions, eliminating `OSError: [Errno 22] Invalid argument` when extracting protected or long warning entry names (e.g. 356-character warning file in KiriKiri `babel45\data.xp3`).
+- Enhanced CatSystem2 INT format parser (`src/garex/backends/native/formats/int.py`) to properly detect Frontwing Blowfish+MersenneTwister encrypted archives (`__key__.dat` signature) and raise `EncryptedArchiveError` with actionable information rather than generic corruption errors.
+- Enhanced backend router (`src/garex/backends/router.py`) to re-raise `EncryptedArchiveError` during auto-backend fallback so users are informed immediately when an archive requires an encryption key.
+
 - Comprehensive strategic RFC and action plan for transitioning GarEx to open-source GitHub project, establishing TakoYune as lead developer, honoring morkt's original GARbro legacy, resolving bridge distribution without binary bloat, and defining strict v0.1.0 scope (`docs/11_GARBRO_LEGACY_AND_OPENSOURCE_PLAN.md`).
 - Git repository initialized for GarEx root workspace (Phase 0 Task 0.1).
 - Pinned upstream GARbro as a git submodule in `vendor/GARbro` at commit `b09ee4570ccb1daf6ac56710ee8934dc0b8baeb0` (Phase 0 Task 0.2).

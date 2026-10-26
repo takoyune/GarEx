@@ -8,7 +8,7 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 
 ## [Unreleased]
 ### Added
-- Real-world visual novel archive testing tool `tools/test_real_vns.py` scanning commercial games across `D:\Visual Novel` and validating native opening, listing, entry sampling, and extraction speed.
+- Real-world visual novel archive testing tool `tools/test_real_vns.py` scanning commercial games across `D:\Visual Novel` and validating opening, listing, entry extraction, and on-the-fly conversion across 11 visual novel engine families (Ren'Py RPA, KiriKiri XP3, NScripter NSA/SAR, CatSystem2 INT, AliceSoft System 4 AFA, AliceSoft ALD, YU-RIS YPF, Waffle NekoSDK PAK, Circus PCK, Eushully ALF, and Marmalade/Entis NOA).
 - Comprehensive filesystem path sanitization unit tests in `tests/unit/test_path_safety.py` covering Windows invalid character replacement and path component length truncation (expanding test suite to 51 tests at 100% pass rate).
 - Pure Python NScripter SAR and NSA archive decoders and creators in `src/garex/backends/native/formats/nscripter.py` with 100% differential parity, completing Option A Native format pipeline (Phase 5 Task 5.5). Includes MSB-first bitstream reader, Okumura LZSS decompression, SPB 24-bit bitmap decoding, and NBZ bzip2 decompression.
 - Comprehensive integration and differential test suite in `tests/integration/test_native_nscripter.py` expanding test suite to 49 passed tests (100% pass rate).

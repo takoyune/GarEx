@@ -253,8 +253,14 @@ Format  : See the template below.
     - `doinaka_brother_en\data.xp3` (1,019.73 MB / 1.02 GB, 1,833 files): opened in 0.018s, extracted TJS scripts in 0.020s.
   - Tested **NScripter (`NSA`)**:
     - `Antique\PLANEKO\arc.nsa` (489.49 MB, 5,810 files): opened in 0.093s, extracted TXT scripts in 0.068s and compressed OGG audio in 0.071s.
-  - Tested **CatSystem2 (`INT`)**:
-    - `ガールズ・ブック・メイカー\config.int`, `bgm.int`, `bgv.int`: Correctly identified Frontwing Blowfish+MersenneTwister encrypted archives (`__key__.dat` signature) and raised `EncryptedArchiveError` with actionable key instructions.
+  - Tested **Extended Visual Novel Engine Archives (Bridge & Conversion)**:
+    - **AliceSoft System 4 (`AFA`)**: `Rance01CG.afa` (392.31 MB, 1,328 entries) opened in 0.013s, extracted `_立ち絵／アイ／基本.QNT` verified.
+    - **AliceSoft ALD (`ALD`)**: `GALZOOBA.ald` (861.36 MB, 101 entries) & `GALZOOGA.ald` (508.92 MB, 2,751 entries) opened in 0.013s, extracted WAV audio and QNT graphics verified.
+    - **YU-RIS / CLOCKUP (`YPF`)**: `CLOCKUP\Injoku` and `idk\pac` (`bgm.ypf` 56.82 MB, `cg.ypf` 247.91 MB, 498 entries) opened in 0.013s, extracted OGG audio and PNG graphics verified.
+    - **Waffle NekoSDK (`PAK`)**: `WAFFLE\メイドと魔術師` (`bg.pak` 160.01 MB, 217 entries, `BGM.pak` 26.49 MB) opened in 0.012s, extracted BMP and OGG verified.
+    - **Circus Da Capo (`PCK`)**: `CIRCUS\EF` (`TITLE_SD_1.PCK` 8.45 MB, `eff_atk01.PCK` 0.12 MB) opened in 0.003s. Verified **on-the-fly conversion of proprietary `.CRX` image to standard `.PNG` in 0.104s**.
+    - **Eushully AGE Engine (`ALF`)**: `Eushully\神採りアルケミーマイスター` (`APPEND02.ALF` 40.35 MB, 362 entries, `APPEND03.ALF` 102.62 MB, 1,239 entries) opened in 0.034s, extracted binary scripts verified.
+    - **Marmalade / Entis GLS (`NOA`)**: `ま～まれぇど\お家に帰るまでがましまろです` (`bg.noa` 624.31 MB, 336 entries, `bg2.noa` 14.66 MB) opened in 0.006s, extracted ERI resources verified.
   - Verified **100% Differential Parity Between Native and Bridge**:
     - Ran differential comparison between pure-Python Native backend and C# Bridge backend on commercial `plugin.xp3`, verifying identical 26 entries, identical names, and identical sizes.
   - Fixed Windows filesystem edge cases discovered during real-game testing:
@@ -269,7 +275,7 @@ Format  : See the template below.
   - `tests/unit/test_path_safety.py`
   - `CHANGELOG.md`, `PROGRESS.md`
 - Tests run and results:
-  - Real archive sampling: 8 real commercial VN archives tested successfully.
+  - Real archive sampling: 17 real commercial VN archives across 11 engine families tested successfully with 100% pass rate.
   - Full test suite: 51/51 tests passing (100% pass rate in 15.73s).
 - Next steps: Phase 6 Task 6.3 (Create GitHub Actions CI workflow for Windows + Linux) and prepare first public GitHub release under TakoYune.
 

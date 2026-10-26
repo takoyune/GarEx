@@ -38,9 +38,17 @@ if (-not (Test-Path $refPackage)) {
     & $nuget install Microsoft.NETFramework.ReferenceAssemblies.net46 -OutputDirectory (Join-Path $PSScriptRoot "packages")
 }
 
-# 3. Restore NuGet packages for GARbro
+# 3. Ensure vendor/GARbro exists
+$garbroSln = Join-Path $root "vendor\GARbro\GARbro.sln"
+if (-not (Test-Path $garbroSln)) {
+    Write-Host "Cloning upstream GARbro repository into vendor\GARbro..."
+    $vendorDir = Join-Path $root "vendor\GARbro"
+    git clone --depth 1 https://github.com/morkt/GARbro.git $vendorDir
+}
+
+# 4. Restore NuGet packages for GARbro
 Write-Host "Restoring GARbro NuGet packages..."
-& $nuget restore (Join-Path $root "vendor\GARbro\GARbro.sln")
+& $nuget restore $garbroSln
 
 # 4. Build projects
 $overrides = Join-Path $PSScriptRoot "build_overrides.targets"

@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <TargetFrameworkRootPath>D:\code iwan\GarEx\tools\packages\Microsoft.NETFramework.ReferenceAssemblies.net46.1.0.3\build</TargetFrameworkRootPath>
+    <TargetFrameworkRootPath>$(MSBuildThisFileDirectory)packages\Microsoft.NETFramework.ReferenceAssemblies.net46.1.0.3\build</TargetFrameworkRootPath>
   </PropertyGroup>
 
   <!-- Override legacy NuGet package import check so build succeeds without touching vendor -->

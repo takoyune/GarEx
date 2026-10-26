@@ -19,6 +19,10 @@
 - Technical specification for NScripter SAR and NSA archive formats in `docs/formats/NSCRIPTER.md`.
 
 ### Fixed
+- Fixed CI build failure on Windows by replacing hardcoded MSBuild `TargetFrameworkRootPath` with dynamic `$(MSBuildThisFileDirectory)` in `tools/build_overrides.targets`.
+- Added automatic clone of upstream `vendor/GARbro` in `tools/build_upstream.ps1` if absent during CI build.
+- Added auto-skip hook in `tests/conftest.py` for `@pytest.mark.bridge` tests when bridge executables are absent (allowing native tests to run and pass cleanly on Linux CI runners).
+- Tracked `src/garex/_bridge/.gitkeep` in git so clean repository checkouts preserve the directory structure required by Hatchling.
 - Corrected Python API code snippet in `README.md` to use the working `arc.extract(...)` method instead of the non-existent `arc.open_entry(...)`.
 - Accurately distinguished cross-platform pure-Python native formats (Windows, Linux, macOS) from the Windows-only 800+ legacy commercial bridge catalog in `README.md`.
 - Added missing `[project.optional-dependencies]` dev group (`pytest`, `pytest-cov`, `pytest-asyncio`) and metadata classifiers to `pyproject.toml`, enabling `pip install -e ".[dev]"`.

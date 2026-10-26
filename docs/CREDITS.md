@@ -15,11 +15,7 @@
 
 ## Community & Upstream Acknowledgments
 
-We extend our deep gratitude to upstream GARbro contributors and community translators who made the original project an indispensable tool for visual novel enthusiasts worldwide:
-- **Korean Translation**: tock (토끼)
-- **Traditional Chinese Translation**: Meng
-- **Simplified Chinese Translation**: wushantao
-- **Visual Novel Community**: The reverse engineers, translators, and modders behind KiriKiri, ONScripter, CatSystem2, Ren'Py, and countless engine-specific toolsets who laid the groundwork for visual novel preservation.
+We extend our gratitude to the visual novel preservation community — the reverse engineers, translators, and modders behind KiriKiri, ONScripter, CatSystem2, Ren'Py, and countless engine-specific toolsets who laid the groundwork for visual novel modding and archiving.
 
 ---
 

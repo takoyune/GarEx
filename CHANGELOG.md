@@ -6,7 +6,7 @@
 - Rebuilt public documentation structure in `docs/` for open-source GitHub release:
   - `docs/CONTRIBUTING.md`: Contributor and developer guide for setting up the environment, writing native format decoders, and submitting pull requests.
   - `docs/BUILDING.md`: Standalone Windows compilation guide for building upstream C# bridge assemblies via `tools/build_upstream.ps1`.
-  - `docs/CREDITS.md`: Clear attribution and licensing credits for TakoYune, upstream author morkt, community translators, and MIT license text.
+  - `docs/CREDITS.md`: Clear attribution and licensing credits for TakoYune, upstream author morkt, the visual novel modding community, and MIT license text.
   - `docs/ENGINE_STATUS.md`: Clean visual novel engine catalog and game compatibility matrix.
   - `docs/FORMAT_TRACKER.md`: Clean catalog of all 831 formats without internal contract annotations.
 - Cleaned technical specifications in `docs/formats/` (`INT.md`, `NSCRIPTER.md`, `RPA.md`, `XP3.md`) removing internal planning annotations.

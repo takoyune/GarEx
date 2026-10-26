@@ -19,6 +19,7 @@
 - Technical specification for NScripter SAR and NSA archive formats in `docs/formats/NSCRIPTER.md`.
 
 ### Fixed
+- Fixed backend router (`src/garex/backends/router.py`) to lazily resolve the C# bridge backend and avoid raising `BridgeNotFoundError` when operating in native or auto mode on platforms without bridge binaries (e.g. Linux CI runners).
 - Fixed CI build failure on Windows by replacing hardcoded MSBuild `TargetFrameworkRootPath` with dynamic `$(MSBuildThisFileDirectory)` in `tools/build_overrides.targets`.
 - Added automatic clone of upstream `vendor/GARbro` in `tools/build_upstream.ps1` if absent during CI build.
 - Added auto-skip hook in `tests/conftest.py` for `@pytest.mark.bridge` tests when bridge executables are absent (allowing native tests to run and pass cleanly on Linux CI runners).

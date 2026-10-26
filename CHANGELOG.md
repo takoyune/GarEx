@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Redesigned and modernized `README.md` based on Best-README-Template standards: centered project shields, collapsible Table of Contents, visual novel problem statement, practical CLI/Python API snippets, high-level engine overview, and collapsible advanced capability highlights (on-the-fly conversion, enterprise path safety, differential parity).
 - Rebuilt public documentation structure in `docs/` for open-source GitHub release:
   - `docs/CONTRIBUTING.md`: Contributor and developer guide for setting up the environment, writing native format decoders, and submitting pull requests.
   - `docs/BUILDING.md`: Standalone Windows compilation guide for building upstream C# bridge assemblies via `tools/build_upstream.ps1`.

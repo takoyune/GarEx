@@ -66,7 +66,7 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 - Auto-loading of native formats upon any registry access via `ensure_formats_loaded()`.
 
 ### Changed
-- Updated `README.md` with comprehensive documentation applying `markdown-mermaid-writing`, `writing-guidelines`, and `humanizer` skills: added hybrid architecture Mermaid diagram, updated 51/51 test pass badge, full Option A completion matrix (Ren'Py, KiriKiri, CatSystem2, NScripter 100% complete), extended visual novel engine support table (AliceSoft, Circus, Eushully, YU-RIS, Waffle, Marmalade), and security/path safety details.
+- Streamlined and cleaned up `README.md` to be user-focused: removed internal test counts, stripped Option A roadmap jargon, removed conversion bloat, and focused on clear CLI commands, Python examples, supported visual novel games, and TakoYune authorship.
 - Updated `vendor/README.md` recording pinned commit details.
 - Updated `docs/06_FORMAT_PORTING_GUIDE.md` integrating reverse-engineering and TDD skills into the format porting steps.
 - Updated `reference/GARBRO_REPO_MAP.md` filling all verified repository facts and answering architectural questions (Phase 0 Task 0.5).

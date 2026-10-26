@@ -266,8 +266,9 @@ Format  : See the template below.
   - Fixed Windows filesystem edge cases discovered during real-game testing:
     - In `src/garex/security.py`: Added replacement of invalid Windows filename characters (`< > : " / \ | ? *`) and length truncation for path components > 200 chars to prevent Win32 `OSError: [Errno 22] Invalid argument` on warning entries (such as the 356-char warning file in KiriKiri archives).
     - In `src/garex/backends/router.py`: Prevented auto-backend resolution from swallowing `EncryptedArchiveError`.
-  - Added new path safety unit tests in `tests/unit/test_path_safety.py`, expanding the test suite to **51 passed tests (100% pass rate in 15.73s)**.
+  - Updated `README.md` applying 3 specialized skills (`markdown-mermaid-writing`, `writing-guidelines`, `humanizer`): updated tests badge to 51/51, added hybrid architecture Mermaid diagram, documented complete Option A native formats and extended visual novel engine support, and included security/path safety details.
 - Files created/changed:
+  - `README.md`
   - `tools/test_real_vns.py`
   - `src/garex/security.py`
   - `src/garex/backends/native/formats/int.py`

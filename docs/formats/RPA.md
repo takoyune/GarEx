@@ -1,8 +1,3 @@
-<!--
-FILE CONTRACT
-Purpose : Technical format notes for Ren'Py RPA archive format.
-Source  : https://github.com/morkt/GARbro/blob/master/ArcFormats/RenPy/ArcRPA.cs
--->
 
 # Format: RPA (Ren'Py Archive)
 

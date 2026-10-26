@@ -21,3 +21,15 @@ samples/
 *.xp3
 *.arc
 *.pak
+*.nsa
+*.sar
+*.rpa
+*.int
+
+# internal development notes and AI logs
+.dev/
+AGENT_INSTRUCTIONS.md
+PROGRESS.md
+DECISIONS.md
+reference/
+

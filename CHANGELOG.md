@@ -1,13 +1,15 @@
-<!--
-FILE CONTRACT
-Purpose : User-facing change history (Keep a Changelog format, SemVer).
-Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
--->
-
 # Changelog
 
 ## [Unreleased]
 ### Added
+- Rebuilt public documentation structure in `docs/` for open-source GitHub release:
+  - `docs/CONTRIBUTING.md`: Contributor and developer guide for setting up the environment, writing native format decoders, and submitting pull requests.
+  - `docs/BUILDING.md`: Standalone Windows compilation guide for building upstream C# bridge assemblies via `tools/build_upstream.ps1`.
+  - `docs/CREDITS.md`: Clear attribution and licensing credits for TakoYune, upstream author morkt, community translators, and MIT license text.
+  - `docs/ENGINE_STATUS.md`: Clean visual novel engine catalog and game compatibility matrix.
+  - `docs/FORMAT_TRACKER.md`: Clean catalog of all 831 formats without internal contract annotations.
+- Cleaned technical specifications in `docs/formats/` (`INT.md`, `NSCRIPTER.md`, `RPA.md`, `XP3.md`) removing internal planning annotations.
+- Safely isolated all internal development notes and AI task checklists into local `.dev/` folder protected by `.gitignore`.
 - Real-world visual novel archive testing tool `tools/test_real_vns.py` scanning commercial games across `D:\Visual Novel` and validating opening, listing, entry extraction, and on-the-fly conversion across 11 visual novel engine families (Ren'Py RPA, KiriKiri XP3, NScripter NSA/SAR, CatSystem2 INT, AliceSoft System 4 AFA, AliceSoft ALD, YU-RIS YPF, Waffle NekoSDK PAK, Circus PCK, Eushully ALF, and Marmalade/Entis NOA).
 - Comprehensive filesystem path sanitization unit tests in `tests/unit/test_path_safety.py` covering Windows invalid character replacement and path component length truncation (expanding test suite to 51 tests at 100% pass rate).
 - Pure Python NScripter SAR and NSA archive decoders and creators in `src/garex/backends/native/formats/nscripter.py` with 100% differential parity, completing Option A Native format pipeline (Phase 5 Task 5.5). Includes MSB-first bitstream reader, Okumura LZSS decompression, SPB 24-bit bitmap decoding, and NBZ bzip2 decompression.

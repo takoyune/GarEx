@@ -1,8 +1,3 @@
-<!--
-FILE CONTRACT
-Purpose : Technical specification and binary layout for CatSystem2 INT archives.
-Status  : ACTIVE. Reference for native pure-Python implementation.
--->
 
 # Technical Format Specification: CatSystem2 INT
 

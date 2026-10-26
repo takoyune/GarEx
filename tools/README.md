@@ -1,13 +1,9 @@
-<!--
-FILE CONTRACT
-Purpose : Dev scripts. Each script must have a header comment (purpose, usage, inputs, outputs).
-Status  : EMPTY PLACEHOLDER.
--->
+# Development Tools and Utilities
 
-# tools/
+This directory contains utility scripts for building, testing, and maintaining GarEx:
 
-WHAT THIS MUST BECOME - scripts the agent creates as phases require:
-- `format_inventory.py`  (Phase 0, task 0.7) - scans upstream, generates `docs/10_FORMAT_TRACKER.md`.
-- `build_bridge.py`      (Phase 1) - builds upstream + bridge and copies outputs to `src/garex/_bridge/`.
-- `difftest.py`          (Phase 5) - differential test harness, see `docs/06_FORMAT_PORTING_GUIDE.md`.
-MUST NOT: contain library logic that belongs in `src/garex/`.
+- **`build_upstream.ps1`**: Builds the upstream C# bridge assemblies (`GameRes.dll`, `ArcFormats.dll`, etc.) on Windows.
+- **`build_bridge.ps1`**: Copies compiled bridge assemblies into `src/garex/_bridge/` for Windows distribution.
+- **`format_inventory.py`**: Scans the upstream format catalog and generates `docs/FORMAT_TRACKER.md`.
+- **`difftest.py`**: Differential testing harness comparing pure-Python native decoders against upstream GARbro bridge output.
+- **`test_real_vns.py`**: Integration testing script that runs GarEx across commercial visual novel archives from your local game library.

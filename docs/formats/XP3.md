@@ -1,8 +1,3 @@
-<!--
-FILE CONTRACT
-Purpose : Technical specification and binary layout for KiriKiri / TVP XP3 archives.
-Status  : ACTIVE. Reference for native pure-Python implementation.
--->
 
 # Technical Format Specification: KiriKiri XP3
 

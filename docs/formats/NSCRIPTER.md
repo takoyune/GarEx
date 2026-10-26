@@ -1,8 +1,3 @@
-<!--
-FILE CONTRACT
-Purpose : Technical specification and binary layout for NScripter SAR and NSA archives.
-Status  : ACTIVE. Reference for native pure-Python implementation.
--->
 
 # Technical Format Specification: NScripter SAR & NSA
 

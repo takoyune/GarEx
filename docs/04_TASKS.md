@@ -54,13 +54,13 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 - [x] 5.2 Port first format end-to-end as a reference implementation (Ported Ren'Py RPA-3.0 in `backends/native/formats/rpa.py`, 100% byte parity verified).
 - [x] 5.3 Port second format: KiriKiri (`XP3`) (Pure Python decoder and creator in `backends/native/formats/xp3.py`, 100% byte and metadata parity verified in differential tests against GARbro bridge).
 - [x] 5.4 Port third format: CatSystem2 (`INT`) (Pure Python decoder and creator in `backends/native/formats/int.py`, 100% byte and metadata parity verified in differential tests against GARbro bridge).
-- [ ] 5.5 Port fourth format: NScripter (`SAR`/`NSA`).
+- [x] 5.5 Port fourth format: NScripter (`SAR`/`NSA`) (Pure Python decoders and creators in `backends/native/formats/nscripter.py` with 100% differential parity against GARbro bridge). Option A 100% complete!
 - [ ] 5.n Port further formats. One task per format; link to tracker row.
 
 ## Phase 6 - Open-Source Launch & Release Hardening
 - [x] 6.0 Open-source pivot RFC approved (`docs/11_GARBRO_LEGACY_AND_OPENSOURCE_PLAN.md`); set TakoYune author and legacy continuation mission.
-- [ ] 6.1 Decouple `vendor/` from Git tracking; replace code/doc references with canonical upstream GitHub URLs.
-- [ ] 6.2 Implement `tools/fetch_bridge.py` developer helper script for downloading bridge release assets.
+- [x] 6.1 Decouple `vendor/` from Git tracking; replace code/doc references with canonical upstream GitHub URLs.
+- [x] 6.2 Implement `tools/fetch_bridge.py` developer helper script for downloading bridge release assets.
 - [ ] 6.3 Add GitHub Actions CI workflow (`.github/workflows/ci.yml`) for automated Windows & Linux testing.
 - [ ] 6.4 Docs and README quickstart verified on a clean environment.
 - [ ] 6.5 Versioning scheme (SemVer) + CHANGELOG.

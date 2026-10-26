@@ -17,7 +17,7 @@ This document tracks all Visual Novel game engines and resource formats supporte
 | **Primary Roadmap** | **Option A** | Ren'Py, KiriKiri, CatSystem2, NScripter |
 | **Total Engine Families Documented** | **50+** | Major commercial and doujin visual novel engines |
 | **Bridge Backend Coverage** | **100%** | All formats recognized by upstream GARbro |
-| **Native Pure-Python Coverage** | **3 Complete / 1 In-Queue** | `RPA` (Ren'Py), `XP3` (KiriKiri), `INT` (CatSystem2) complete with round-trip creation |
+| **Native Pure-Python Coverage** | **4 Complete (Option A 100% Done)** | `RPA` (Ren'Py), `XP3` (KiriKiri), `INT` (CatSystem2), `SAR`/`NSA` (NScripter) complete with round-trip creation |
 | **Differential Test Verification** | **100% Byte Parity** | Verified with `tools/difftest.py` against `garex-bridge.exe` |
 
 ---
@@ -31,8 +31,8 @@ Option A focuses on the most ubiquitous visual novel engines in the internationa
 | **Ren'Py** | `RPA` | `.rpa` | [x] | [x] | [x] | [x] | [x] 100% | **COMPLETE (Native)** |
 | **KiriKiri / TVP** | `XP3` | `.xp3` | [x] | [x] | [x] | [x] | [x] 100% | **COMPLETE (Native)** |
 | **CatSystem2** | `INT` | `.int` | [x] | [x] | [x] | [x] | [x] 100% | **COMPLETE (Native)** |
-| **NScripter** | `SAR` | `.sar` | [x] | [x] | [ ] | [ ] | [ ] | **QUEUED** (Task 5.5) |
-| **NScripter / ONS** | `NSA` | `.nsa` | [x] | [x] | [ ] | [ ] | [ ] | **QUEUED** (Task 5.5) |
+| **NScripter** | `SAR` | `.sar` | [x] | [x] | [x] | [x] | [x] 100% | **COMPLETE (Native)** |
+| **NScripter / ONS** | `NSA` | `.nsa` | [x] | [x] | [x] | [x] | [x] 100% | **COMPLETE (Native)** |
 
 ---
 
@@ -45,8 +45,8 @@ Option A focuses on the most ubiquitous visual novel engines in the internationa
 | **Ren'Py** | `RPA` | `.rpa` | **Complete** | **Complete (Native)** | Yes (Bridge & Native) | *Doki Doki Literature Club*, *Katawa Shoujo*, *Slay the Princess* |
 | **KiriKiri / TVP** | `XP3` | `.xp3` | **Complete** | **Complete (Native)** | Yes (Bridge & Native) | *Fate/stay night*, *Fate/hollow ataraxia*, *Tsukihime*, *Witch on the Holy Night* |
 | **CatSystem2** | `INT` | `.int` | **Complete** | **Complete (Native)** | Yes (Bridge & Native) | *Grisaia no Kajitsu*, *Chrono Clock*, Frontwing & Windmill games |
-| **NScripter** | `SAR` | `.sar` | **Complete** | Queued (Phase 5) | Yes (Bridge) | *Tsukihime*, *Kagetsu Tohya*, Naoki Takahashi engine |
-| **NScripter / ONS** | `NSA` | `.nsa` | **Complete** | Queued (Phase 5) | Yes (Bridge) | *Higurashi no Naku Koro ni*, *Umineko no Naku Koro ni* |
+| **NScripter** | `SAR` | `.sar` | **Complete** | **Complete (Native)** | Yes (Bridge & Native) | *Tsukihime*, *Kagetsu Tohya*, Naoki Takahashi engine |
+| **NScripter / ONS** | `NSA` | `.nsa` | **Complete** | **Complete (Native)** | Yes (Bridge & Native) | *Higurashi no Naku Koro ni*, *Umineko no Naku Koro ni* |
 | **Majiro** | `MAJIRO` | `.arc` | **Complete** | Planned (Phase 5) | Yes (Bridge) | *Flowers* series, Innocent Grey, 5621 engine |
 | **Yu-Ris** | `YPF` | `.ypf` | **Complete** | Planned (Phase 5) | Yes (Bridge) | *G Senjou no Maou*, *Sharin no Kuni*, Akabeisoft2 |
 | **Yuka Script** | `YKC` | `.ykc` | **Complete** | Planned (Phase 5) | Yes (Bridge) | Yuka script engine resource archive |

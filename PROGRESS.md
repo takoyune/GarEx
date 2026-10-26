@@ -9,9 +9,9 @@ Format  : See the template below.
 
 ## Current state (overwrite this block each session)
 
-- Current phase: Phase 5 (Native ports) & Phase 6 (Open-Source Launch)
-- Last completed task: 6.0 in docs/04_TASKS.md (Open-source pivot, TakoYune attribution, vendor decoupling, and bridge setup utility)
-- Next task: 5.5 in docs/04_TASKS.md (Port fourth format: NScripter SAR/NSA to complete Option A)
+- Current phase: Phase 5 (Native ports - Option A 100% Complete) & Phase 6 (Open-Source Launch)
+- Last completed task: 5.5 in docs/04_TASKS.md (Port fourth format: NScripter SAR/NSA - Option A 100% COMPLETE!)
+- Next task: 6.3 in docs/04_TASKS.md (Create GitHub Actions CI workflow and verify wheel packaging)
 - Blockers / questions for the human: none
 
 ## Session entries (append only)
@@ -217,6 +217,28 @@ Format  : See the template below.
 - Tests run and results: 43/43 tests passing (100% pass rate in pytest).
 - Decisions made: Exclude `vendor/` from Git repository to keep repository lightweight (< 2MB) and use `tools/fetch_bridge.py` and GitHub Actions wheel bundling for bridge binary distribution.
 - Next steps: Task 5.5 (Port fourth native format: NScripter `SAR`/`NSA` to finish Option A).
+
+### Session 2026-10-26 (Phase 5 - Task 5.5 NScripter SAR/NSA Port - Option A Complete!)
+- Phase / tasks worked on: Phase 5 Task 5.5 (Port fourth format: NScripter `SAR`/`NSA` - COMPLETED).
+- What was done:
+  - Applied specialized agent skills:
+    - `reverse-engineer-anything`: Reverse-engineered `ArcSAR.cs` and `ArcNSA.cs`. Documented big-endian header structures, directory layouts, relative offsets, and 4 compression algorithms (None, SPB, LZSS, NBZ) in `docs/formats/NSCRIPTER.md`.
+    - `tdd-workflow`: Created comprehensive integration and differential test suite in `tests/integration/test_native_nscripter.py` verifying roundtrip reading, creating, LZSS decoding, NBZ decompressing, and bi-directional cross-compatibility against GARbro bridge.
+    - `coding-standards`: Adhered to immutability on frozen `Entry` dataclass by using internal compression mapping in `NsaFormat`.
+    - `verification-before-completion`: Verified 100% byte and metadata parity using `tools/difftest.py` comparing all extracted file bytes and SHA-256 hashes against `BridgeBackend`.
+  - Implemented pure Python reader and creator in `src/garex/backends/native/formats/nscripter.py` with `SarFormat` and `NsaFormat`.
+  - Updated `docs/ENGINE_STATUS.md` and `docs/10_FORMAT_TRACKER.md` reflecting `SAR` and `NSA` as complete native formats.
+  - Option A Native Ports ("Big 4" VN engines: Ren'Py, KiriKiri, CatSystem2, NScripter) are now **100% COMPLETE**.
+  - Test suite expanded from 43 to 49 passed tests (100% pass rate).
+- Files created/changed:
+  - `docs/formats/NSCRIPTER.md`
+  - `src/garex/backends/native/formats/nscripter.py`
+  - `tests/integration/test_native_nscripter.py`
+  - `docs/ENGINE_STATUS.md`, `docs/10_FORMAT_TRACKER.md`, `docs/04_TASKS.md`, `CHANGELOG.md`, `PROGRESS.md`
+- Tests run and results: 49/49 tests passing (100% pass rate in pytest).
+- Decisions made: Enforce full directory table validation during probing in `SarFormat` and `NsaFormat` to ensure SAR and NSA archives are mutually exclusive and never misidentified.
+- Next steps: Phase 6 Task 6.3 (Create GitHub Actions CI workflow) and prepare first public GitHub release.
+
 
 
 

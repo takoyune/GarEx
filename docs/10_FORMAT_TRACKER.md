@@ -322,7 +322,7 @@ Rule    : Never mark `native` without a passing differential test.
 | `NPK` | archive | npk | `GameRes.Formats.NitroPlus.NpkOpener` | yes | - | yes | bridge | Mware engine resource archive |
 | `NPP` | archive | npp | `GameRes.Formats.NitroPlus.NppOpener` | yes | - | - | bridge | Nitro+ resource archive |
 | `NS2` | archive | ns2 | `GameRes.Formats.NScripter.Ns2Opener` | yes | - | - | bridge | NScripter game engine resource archive |
-| `NSA` | archive | nsa, dat | `GameRes.Formats.NScripter.NsaOpener` | yes | - | yes | bridge | NScripter game engine resource archive |
+| `NSA` | archive | nsa, dat | `GameRes.Formats.NScripter.NsaOpener` | yes | - | yes | native | NScripter game engine resource archive |
 | `ODN` | archive | odn, dat, pni | `GameRes.Formats.Valkyria.OdnOpener` | yes | - | - | bridge | Valkyria resource archive |
 | `OPK` | archive | opk | `GameRes.Formats.Cromwell.OpkOpener` | yes | - | - | bridge | cromwell audio resource archive |
 | `OVK` | archive | ovk, nwk | `GameRes.Formats.RealLive.OvkOpener` | yes | - | - | bridge | RealLive engine audio archive |
@@ -418,7 +418,7 @@ Rule    : Never mark `native` without a passing differential test.
 | `RPA` | archive | rpa | `GameRes.Formats.RenPy.RpaOpener` | yes | - | yes | native | Ren'Py game engine archive |
 | `S25` | archive | s25 | `GameRes.Formats.ShiinaRio.S25Opener` | yes | - | - | bridge | ShiinaRio engine multi-image |
 | `SAF` | archive | saf | `GameRes.Formats.Rits.SafOpener` | yes | - | - | bridge | Rit's resource archive |
-| `SAR` | archive | sar | `GameRes.Formats.NScripter.SarOpener` | yes | - | yes | bridge | NScripter game engine resource archive |
+| `SAR` | archive | sar | `GameRes.Formats.NScripter.SarOpener` | yes | - | yes | native | NScripter game engine resource archive |
 | `SCN/ARCH` | archive | dat | `GameRes.Formats.Seraphim.Scn95Opener` | yes | - | - | bridge | Archangel engine scripts archive |
 | `SEC5` | archive | sec5 | `GameRes.Formats.Sas5.Sec5Opener` | yes | - | - | bridge | SAS5 engine resource index file |
 | `SEEN` | archive |  | `GameRes.Formats.RealLive.SeenOpener` | yes | - | - | bridge | AVG32 engine scripts archive |

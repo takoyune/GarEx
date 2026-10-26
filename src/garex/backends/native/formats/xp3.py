@@ -1,7 +1,7 @@
 """KiriKiri / TVP XP3 archive format implementation (Pure Python).
 
 Reference:
-- Upstream: vendor/GARbro/ArcFormats/KiriKiri/ArcXP3.cs
+- Upstream: https://github.com/morkt/GARbro/blob/master/ArcFormats/KiriKiri/ArcXP3.cs
 - Specification: docs/formats/XP3.md
 """
 

@@ -10,6 +10,7 @@ build/
 bin/
 obj/
 src/garex/_bridge/
+vendor/
 # tools binaries and packages
 tools/nuget.exe
 tools/packages/

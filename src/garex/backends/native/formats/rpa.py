@@ -1,7 +1,7 @@
 """Pure Python implementation of Ren'Py RPA archive format.
 
 Supports reading and creating RPA-3.0 archives with full byte parity.
-Ported from vendor/GARbro/ArcFormats/RenPy/ArcRPA.cs.
+Ported from upstream GARbro: https://github.com/morkt/GARbro/blob/master/ArcFormats/RenPy/ArcRPA.cs
 """
 
 from __future__ import annotations

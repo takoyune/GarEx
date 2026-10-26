@@ -9,7 +9,7 @@ Status  : ACTIVE. Reference for native pure-Python implementation.
 - **Format Tag**: `INT`
 - **Engine**: CatSystem2 / Frontwing / Windmill
 - **Primary Extension**: `.int`
-- **Upstream Source**: `vendor/GARbro/ArcFormats/CatSystem/ArcINT.cs`
+- **Upstream Source**: https://github.com/morkt/GARbro/blob/master/ArcFormats/CatSystem/ArcINT.cs
 - **Signature**: `0x0046494B` (`KIF\x00`)
 
 ---

@@ -9,9 +9,9 @@ Format  : See the template below.
 
 ## Current state (overwrite this block each session)
 
-- Current phase: Phase 5 (Native ports)
-- Last completed task: 5.4 in docs/04_TASKS.md (CatSystem2 INT native port completed with 100% parity)
-- Next task: 5.5 in docs/04_TASKS.md (Port fourth format: NScripter SAR/NSA)
+- Current phase: Phase 5 (Native ports) & Phase 6 (Open-Source Launch)
+- Last completed task: 6.0 in docs/04_TASKS.md (Open-source pivot, TakoYune attribution, vendor decoupling, and bridge setup utility)
+- Next task: 5.5 in docs/04_TASKS.md (Port fourth format: NScripter SAR/NSA to complete Option A)
 - Blockers / questions for the human: none
 
 ## Session entries (append only)
@@ -189,6 +189,35 @@ Format  : See the template below.
 - Tests run and results: 43/43 tests passing (100% pass rate in pytest).
 - Decisions made: Support both 64-byte (standard v2) and 32-byte (legacy v1) directory entry name layouts during probing and listing.
 - Next steps: Task 5.5 (Port fourth format: NScripter `SAR`/`NSA`).
+
+### Session 2026-10-26 (Open-Source Pivot & TakoYune Attribution)
+- Phase / tasks worked on: Phase 6 Task 6.0 (Open-source pivot, TakoYune attribution, vendor decoupling, and bridge setup utility - COMPLETED).
+- What was done:
+  - Conducted `/grill-me` alignment interview and `/agentic-quality-engineering` audit on open-source pivot:
+    - Established **TakoYune** as lead developer and maintainer of GarEx.
+    - Redefined project mission as the modern continuation and evolution of the GARbro legacy (originally by `morkt`).
+    - Formulated solutions to 4 key Quality Engineering guardrails: clean Git repository (< 2MB) without binary bloat, honorable dual-attribution, Windows-first testing with platform isolation, and strict v0.1.0 porting focus.
+  - Authored comprehensive RFC in `docs/11_GARBRO_LEGACY_AND_OPENSOURCE_PLAN.md`.
+  - Updated `pyproject.toml`, `docs/01_GOALS.md`, `docs/02_ARCHITECTURE.md`, `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, `docs/05_DO_AND_DONT.md`, `docs/09_LICENSE_AND_CREDITS.md`, `NOTICE.md`, and `README.md`.
+  - Created root `LICENSE` file with dual-attribution for TakoYune (2026) and morkt (2011–2023).
+  - Decoupled `vendor/GARbro` from Git tracking: removed git submodule and `.gitmodules`, added `vendor/` to `.gitignore`.
+  - Replaced all local `vendor/GARbro/...` file references across native code and format specifications with canonical upstream GitHub URLs (`https://github.com/morkt/GARbro/blob/master/...`).
+  - Created developer utility `tools/fetch_bridge.py` for easily obtaining pre-built bridge binaries without compilation.
+  - Verified 100% test pass rate (43/43 tests passing in pytest).
+- Files created/changed:
+  - `docs/11_GARBRO_LEGACY_AND_OPENSOURCE_PLAN.md`
+  - `LICENSE`
+  - `tools/fetch_bridge.py`
+  - `pyproject.toml`, `README.md`, `NOTICE.md`, `.gitignore`
+  - `docs/01_GOALS.md`, `docs/02_ARCHITECTURE.md`, `docs/03_ROADMAP.md`, `docs/04_TASKS.md`, `docs/05_DO_AND_DONT.md`, `docs/09_LICENSE_AND_CREDITS.md`
+  - `docs/formats/RPA.md`, `docs/formats/XP3.md`, `docs/formats/INT.md`
+  - `src/garex/backends/bridge.py`
+  - `src/garex/backends/native/formats/rpa.py`, `xp3.py`, `int.py`
+  - `CHANGELOG.md`, `PROGRESS.md`
+- Tests run and results: 43/43 tests passing (100% pass rate in pytest).
+- Decisions made: Exclude `vendor/` from Git repository to keep repository lightweight (< 2MB) and use `tools/fetch_bridge.py` and GitHub Actions wheel bundling for bridge binary distribution.
+- Next steps: Task 5.5 (Port fourth native format: NScripter `SAR`/`NSA` to finish Option A).
+
 
 
 

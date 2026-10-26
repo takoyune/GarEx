@@ -1,7 +1,7 @@
 """CatSystem2 INT archive format implementation (Pure Python).
 
 Reference:
-- Upstream: vendor/GARbro/ArcFormats/CatSystem/ArcINT.cs
+- Upstream: https://github.com/morkt/GARbro/blob/master/ArcFormats/CatSystem/ArcINT.cs
 - Specification: docs/formats/INT.md
 """
 

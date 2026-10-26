@@ -10,10 +10,14 @@ build-backend = "hatchling.build"
 [project]
 name = "garex"
 version = "0.1.0"
-description = "Python library for browsing, extracting, converting and repacking visual novel game resources (port of GARbro)."
+description = "Modern visual novel resource management library and CLI — continuing the legacy of GARbro."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }
+authors = [
+    { name = "TakoYune" }
+]
+urls = { Homepage = "https://github.com/TakoYune/GarEx", Repository = "https://github.com/TakoYune/GarEx" }
 dependencies = []
 
 [project.scripts]

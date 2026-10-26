@@ -1,3 +1,0 @@
-[submodule "vendor/GARbro"]
-	path = vendor/GARbro
-	url = https://github.com/morkt/GARbro

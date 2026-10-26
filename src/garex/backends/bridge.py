@@ -39,21 +39,20 @@ def find_bridge_exe() -> Path:
     if env_bridge and Path(env_bridge).exists():
         return Path(env_bridge)
 
-    # 3. Development fallback to vendor build directory
-    vendor_bridge = (
+    # 3. Development local bridge build directory
+    local_bridge = (
         Path(__file__).resolve().parent.parent.parent.parent
-        / "vendor"
-        / "GARbro"
+        / "bridge"
         / "bin"
         / "Release"
-        / "GARbro.Console.exe"
+        / "garex-bridge.exe"
     )
-    if vendor_bridge.exists():
-        return vendor_bridge
+    if local_bridge.exists():
+        return local_bridge
 
     raise BridgeNotFoundError(
         f"garex-bridge executable not found. Expected at {pkg_bridge}. "
-        "Run 'powershell -File tools/build_upstream.ps1' or rebuild the bridge."
+        "Run 'python tools/fetch_bridge.py' to obtain pre-built bridge files."
     )
 
 

@@ -1,74 +1,89 @@
 <!--
 FILE CONTRACT
-Purpose : Technical design of garex: layers, interfaces, data models, how bridge and native backends coexist.
-Status  : DRAFT (skeleton below is the owner-approved direction). Agent REFINES it in Phase 0-1 after reading the real GARbro source; mark every refinement with "(refined YYYY-MM-DD)".
-Must end up containing : final class/function signatures, error model, backend selection algorithm, bridge protocol spec.
+Purpose : Technical design of GarEx: layers, interfaces, data models, dual-core architecture, and bridge distribution.
+Status  : ACTIVE. Updated with owner approval for open-source pivot and decoupled bridge architecture.
 -->
 
 # Architecture
 
-## Layers
+## 1. High-Level System Design
+
+GarEx is built on a **dual-core architecture** designed by **TakoYune**:
 
 ```
-user code
-   |
-garex public API  (src/garex/api.py)           <- stable, typed
-   |
-Backend router    (src/garex/backends/router.py)
-   |-- NativeBackend  (backends/native/*)      <- pure Python, per-format modules
-   '-- BridgeBackend  (backends/bridge.py)     <- talks to bundled GARbro C# shim
+                  +-----------------------------------------------+
+                  |          Public API & CLI (src/garex)         |
+                  +-----------------------------------------------+
+                                          |
+                                          v
+                  +-----------------------------------------------+
+                  |       Backend Router (src/garex/router.py)    |
+                  +-----------------------------------------------+
+                                   /             \
+                   (Probe Match)  /               \  (Fallback)
+                                 v                 v
+            +---------------------------+   +---------------------------+
+            |       NativeBackend       |   |       BridgeBackend       |
+            |     (100% Pure Python)    |   |     (Headless C# Shim)    |
+            |   Fast, Zero-Dependency   |   |   4,000+ Legacy Formats   |
+            +---------------------------+   +---------------------------+
 ```
 
-## Public API (draft, refine in Phase 1)
+---
+
+## 2. Public API (`src/garex/api.py`)
+
+The public interface is modern, typed, context-manager friendly, and accepts `pathlib.Path` or string paths:
 
 ```python
 import garex
 
-with garex.open_archive("data.xp3") as arc:       # returns Archive
-    for entry in arc.entries():                    # Entry: name, size, packed_size, offset, type
-        ...
-    arc.extract("script/main.ks", dest="out/")
-    arc.extract_all(dest="out/", convert=True)     # convert images/audio to png/wav/ogg etc.
+# 1. Open and inspect archive
+with garex.open_archive("data.xp3") as arc:
+    for entry in arc.entries():
+        print(entry.name, entry.size)
+    
+    # Extract specific file or all files
+    arc.extract("scripts/start.ks", dest="unpacked/")
+    arc.extract_all(dest="unpacked/", convert=True)  # auto-convert images/audio
 
-garex.convert_image("in.grp", "out.png")           # phase 3
-garex.convert_audio("in.wav2", "out.ogg")          # phase 3
-garex.create_archive("out.xp3", files=[...], format="xp3")   # phase 4
-garex.supported_formats()                          # list with status native/bridge
+# 2. Standalone media conversions
+garex.convert_image("cg01.grp", "cg01.png")
+garex.convert_audio("bgm01.wav2", "bgm01.ogg")
+
+# 3. Create or repack archives
+garex.create_archive("modded.xp3", files=["unpacked/scripts/start.ks"], format="xp3")
 ```
 
-Rules: context-manager support, `pathlib.Path` accepted everywhere, no global mutable state,
-full type hints, typed exceptions (`garex.errors`).
+---
 
-## Data models (`src/garex/models.py`)
-`Entry`, `ArchiveInfo`, `FormatInfo`. Dataclasses, frozen where possible.
+## 3. Backend Coexistence & Router
 
-## Backend router
-For a given file: ask NativeBackend `probe(path)`; if a native format claims it, use it.
-Else ask BridgeBackend. If neither: raise `UnsupportedFormatError`.
-User can force a backend: `garex.open_archive(path, backend="bridge" | "native" | "auto")`.
+1. **NativeBackend** (`src/garex/backends/native/`):
+   - 100% pure Python using `BinaryReader` and standard libraries (`zlib`, `struct`).
+   - Cross-platform: runs anywhere Python 3.10+ runs (Windows, Linux, macOS, Steam Deck, Android).
+   - Priority handling: The router probes the native registry first. If a native module claims the format, it extracts or creates with zero subprocess overhead.
 
-## Bridge protocol (refine in Phase 1; default = helper exe, see DECISIONS ADR-004)
-- Executable `garex-bridge.exe` (built from `/bridge`, references unmodified GARbro DLLs).
-- Python spawns it, exchanges **JSON lines** over stdin/stdout.
-- Commands (minimum): `probe`, `list`, `extract`, `convert_image`, `convert_audio`, `create`, `formats`.
-- Binary payloads are never sent inline; the bridge writes to a temp/target path and returns the path.
-- Every response: `{"ok": true, ...}` or `{"ok": false, "error": {"code":..., "message":...}}`.
+2. **BridgeBackend** (`src/garex/backends/bridge.py`):
+   - Fallback engine on Windows communicating via JSON-lines RPC over stdio with `garex-bridge.exe`.
+   - References `GameRes.dll` and `ArcFormats.dll` to unlock the entire 4,000+ catalog from upstream GARbro.
+   - Ground-truth oracle for differential testing (`tools/difftest.py`).
 
-## Native format module contract
-Each native format is one module in `src/garex/backends/native/formats/` exposing a class that
-implements `NativeFormat` (see `backends/native/base.py`): `probe`, `open`, `read_entry`,
-and optionally `create`. Registered via a registry decorator. Details: `06_FORMAT_PORTING_GUIDE.md`.
+---
 
-## Encryption / game keys
-GARbro stores game-specific schemes/keys in `GameData/Formats.dat` as a zlib-compressed
-.NET `BinaryFormatter` stream of `SchemeDataBase` (containing `SchemeMap` for keys/parameters
-and `GameMap` for title mapping). Native ports reuse the exact same data exported to JSON in
-`src/garex/data/` (or queried via bridge). Do not add keys that are not in upstream GARbro.
+## 4. Decoupled Repository & Bridge Distribution Strategy
 
-## Questions for Phase 0-1 (refined 2026-10-25)
-- **Do GARbro DLLs require WPF types for image conversion?**
-  Yes. Upstream `ImageFormat.Read` produces an `ImageData` object wrapping `System.Windows.Media.Imaging.BitmapSource` (`PresentationCore.dll`). The C# bridge (`/bridge`) cleanly converts WPF `BitmapSource` to PNG/WAV streams before sending across the JSON-lines protocol to Python.
-- **How are formats registered/discovered in upstream?**
-  Via Managed Extensibility Framework (MEF, `System.ComponentModel.Composition`). `FormatCatalog` creates an `AggregateCatalog` inspecting `GameRes.dll` and any `Arc*.dll` in the assembly directory, importing classes tagged with `[Export(typeof(ArchiveFormat))]`, `[Export(typeof(ImageFormat))]`, `[Export(typeof(AudioFormat))]`, and `[Export(typeof(ScriptFormat))]`.
-- **How large are real archives? Do we need streaming extraction?**
-  Common archives range from 20 MB to 4–8 GB (e.g. KiriKiri `.xp3`, CatSystem2 `.int`, BGI `.arc`). Streaming extraction (chunked 64 KB / 1 MB buffers) is mandatory to prevent unbounded memory consumption.
+To keep the open-source GitHub repository lightweight (< 2MB) and eliminate binary bloat:
+1. **Source Repository**: Contains 100% clean source code. No compiled `.dll` or `.exe` files and no 150MB `vendor/` submodules in Git history.
+2. **For End Users (`pip install garex`)**:
+   - GitHub Actions CI compiles the Windows bridge on a Windows runner and packages it directly into the wheel (`garex-0.1.0-py3-none-win_amd64.whl`).
+   - Windows users installing via pip get full bridge support out of the box with zero compilation.
+3. **For Developers Cloning the Repo**:
+   - `python tools/fetch_bridge.py`: 1-line script that downloads the pre-built bridge binaries into `src/garex/_bridge/` in seconds.
+   - Developers on Linux/macOS run all Native engines immediately with no bridge files required.
+
+---
+
+## 5. Security & Large Archive Handling
+- **Path Sanitization**: All extract operations pass through `sanitize_entry_path` (`src/garex/security.py`), preventing directory traversal (Zip-Slip) attacks, absolute paths, UNC network paths, and drive escapes.
+- **Streaming Operations**: Real visual novel archives range from 20MB to 8GB+. All extraction logic operates with chunked streams (64KB to 1MB) to prevent unbounded memory growth.

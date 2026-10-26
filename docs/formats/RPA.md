@@ -1,7 +1,7 @@
 <!--
 FILE CONTRACT
 Purpose : Technical format notes for Ren'Py RPA archive format.
-Source  : vendor/GARbro/ArcFormats/RenPy/ArcRPA.cs (commit b09ee45)
+Source  : https://github.com/morkt/GARbro/blob/master/ArcFormats/RenPy/ArcRPA.cs
 -->
 
 # Format: RPA (Ren'Py Archive)
@@ -11,7 +11,7 @@ Source  : vendor/GARbro/ArcFormats/RenPy/ArcRPA.cs (commit b09ee45)
 - **Extensions**: `.rpa`
 - **Kind**: Archive
 - **Upstream Class**: `GameRes.Formats.RenPy.RpaOpener`
-- **Upstream Source**: `vendor/GARbro/ArcFormats/RenPy/ArcRPA.cs`
+- **Upstream Source**: https://github.com/morkt/GARbro/blob/master/ArcFormats/RenPy/ArcRPA.cs
 
 ## Header Structure
 The archive begins with an ASCII header line terminated by newline (`0x0A`):

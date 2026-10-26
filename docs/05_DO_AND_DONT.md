@@ -8,9 +8,9 @@ Status  : FILLED. Read-only for the agent.
 
 ## MUST DO
 1. **Read before writing.** Read `PROGRESS.md` and the current phase before any change.
-2. **Port from source, not memory.** Every native format must be derived from the actual upstream C# code in `vendor/`. Cite file path + commit in the module docstring.
+2. **Port from source, not memory.** Every native format must be derived from the actual upstream C# code (https://github.com/morkt/GARbro). Cite upstream file path and commit/URL in the module docstring.
 3. **Differential-test everything.** A native format is "done" only if its output equals bridge/GARbro output on the test set.
-4. **Keep `vendor/` pristine.** Build customization goes in `bridge/` or build scripts.
+4. **Keep source tree clean.** The `vendor/` directory is ignored in Git to prevent repository bloat; cite upstream links directly.
 5. **Keep the license intact.** MIT notice of upstream must ship in the wheel and in source (see `09_LICENSE_AND_CREDITS.md`).
 6. **Type hints + docstrings** on all public API. Python 3.10+ compatible.
 7. **Safe file handling.** Validate entry names, never write outside the destination, never overwrite originals without explicit user opt-in.

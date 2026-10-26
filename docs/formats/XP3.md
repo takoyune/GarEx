@@ -9,7 +9,7 @@ Status  : ACTIVE. Reference for native pure-Python implementation.
 - **Format Tag**: `XP3`
 - **Engine**: KiriKiri 2 / KAG3 / TVP (W+Studio, Type-Moon, etc.)
 - **Primary Extension**: `.xp3`, `.exe`
-- **Upstream Source**: `vendor/GARbro/ArcFormats/KiriKiri/ArcXP3.cs`
+- **Upstream Source**: https://github.com/morkt/GARbro/blob/master/ArcFormats/KiriKiri/ArcXP3.cs
 - **Signatures**:
   - `0x0d335058` (`XP3\r\n \n\x1a\x8bg\x01`)
   - Optional Windows PE executable stub (`MZ`)

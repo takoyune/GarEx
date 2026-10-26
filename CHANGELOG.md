@@ -8,6 +8,7 @@ Status  : TEMPLATE. Agent adds entries under "Unreleased" as features land.
 
 ## [Unreleased]
 ### Added
+- Comprehensive strategic RFC and action plan for transitioning GarEx to open-source GitHub project, establishing TakoYune as lead developer, honoring morkt's original GARbro legacy, resolving bridge distribution without binary bloat, and defining strict v0.1.0 scope (`docs/11_GARBRO_LEGACY_AND_OPENSOURCE_PLAN.md`).
 - Git repository initialized for GarEx root workspace (Phase 0 Task 0.1).
 - Pinned upstream GARbro as a git submodule in `vendor/GARbro` at commit `b09ee4570ccb1daf6ac56710ee8934dc0b8baeb0` (Phase 0 Task 0.2).
 - Upstream GARbro MIT license copied to `licenses/LICENSE-GARbro.txt`.

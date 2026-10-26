@@ -57,9 +57,12 @@ Status  : TEMPLATE (checklists pre-filled). Task IDs are stable; reference them 
 - [ ] 5.5 Port fourth format: NScripter (`SAR`/`NSA`).
 - [ ] 5.n Port further formats. One task per format; link to tracker row.
 
-## Phase 6 - Release hardening
-- [ ] 6.1 Docs/README quickstart verified on a clean machine.
-- [ ] 6.2 Versioning scheme (SemVer) + CHANGELOG.
-- [ ] 6.3 TestPyPI upload and install test.
-- [ ] 6.4 License/credits audit.
-- [ ] 6.5 PyPI release (owner must approve).
+## Phase 6 - Open-Source Launch & Release Hardening
+- [x] 6.0 Open-source pivot RFC approved (`docs/11_GARBRO_LEGACY_AND_OPENSOURCE_PLAN.md`); set TakoYune author and legacy continuation mission.
+- [ ] 6.1 Decouple `vendor/` from Git tracking; replace code/doc references with canonical upstream GitHub URLs.
+- [ ] 6.2 Implement `tools/fetch_bridge.py` developer helper script for downloading bridge release assets.
+- [ ] 6.3 Add GitHub Actions CI workflow (`.github/workflows/ci.yml`) for automated Windows & Linux testing.
+- [ ] 6.4 Docs and README quickstart verified on a clean environment.
+- [ ] 6.5 Versioning scheme (SemVer) + CHANGELOG.
+- [ ] 6.6 License and credits audit (`licenses/LICENSE-GARbro.txt`, `NOTICE.md`, `README.md`).
+- [ ] 6.7 Publish public GitHub repository and PyPI release package.

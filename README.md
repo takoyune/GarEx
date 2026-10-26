@@ -5,7 +5,7 @@
 
 [![Python Version](https://img.shields.io/badge/python-3.10+-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS%20%7C%20Steam%20Deck-2ea44f.svg?style=for-the-badge)](https://github.com/TakoYune/GarEx)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-2ea44f.svg?style=for-the-badge)](https://github.com/TakoYune/GarEx)
 [![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg?style=for-the-badge)](tests/)
 
 </div>
@@ -66,9 +66,9 @@ Visual novel preservation, translation, and modding often run into proprietary a
 
 **GarEx** is the open-source continuation of **[GARbro](https://github.com/morkt/GARbro)**, developed and maintained by **[TakoYune](https://github.com/TakoYune)**. It bridges visual novel game archiving with the modern cross-platform Python ecosystem:
 
-- **100% Pure Python** for mainstream visual novel engines (runs everywhere without C extensions or external binaries).
-- **Universal Bridge** providing seamless access to the classic 800+ commercial format catalog.
-- **On-the-Fly Conversion** for proprietary visual novel images and audio to standard PNG/WAV.
+- **100% Pure Python** for mainstream visual novel engines (cross-platform on Windows, Linux, and macOS with zero external dependencies).
+- **Universal Bridge** providing seamless access to the classic 800+ commercial format catalog on Windows (or Linux via Wine).
+- **On-the-Fly Conversion** for proprietary visual novel images and audio to standard PNG/WAV via the Windows bridge.
 - **Enterprise Path Safety** protecting against Zip-Slip path traversal and invalid filesystem characters.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -77,9 +77,9 @@ Visual novel preservation, translation, and modding often run into proprietary a
 
 ### Key Features
 
-- ⚡ **Cross-Platform**: Tested and verified on Windows, Linux, macOS, and Steam Deck.
+- ⚡ **Cross-Platform Native Core**: Pure Python formats (Ren'Py, KiriKiri, CatSystem2, NScripter) run natively on Windows, Linux, and macOS.
 - 📦 **Read, Extract & Repack**: Browse file tables, extract single entries or entire archives, and create new packages.
-- 🖼️ **On-The-Fly Conversion**: Auto-convert proprietary image formats (`.crx`, `.tlg`, `.g00`, `.abm`) to `.png` during extraction.
+- 🖼️ **On-The-Fly Conversion**: Auto-convert proprietary image formats (`.crx`, `.tlg`, `.g00`, `.abm`) to `.png` during extraction (Windows bridge).
 - 🛡️ **Hardened Security**: Prevents directory traversal (`../../`) and sanitizes Windows-illegal path characters.
 - 🎯 **Differential Parity**: Verified byte-for-byte SHA-256 equivalence against upstream GARbro.
 
@@ -146,12 +146,12 @@ with garex.open_archive("game.xp3") as arc:
     arc.extract_all("./output_folder/")
 ```
 
-#### Streaming a Single File to Memory
+#### Extracting a Specific Single File
 ```python
 with garex.open_archive("script.rpa") as arc:
-    # Read directly as a binary stream without extracting to disk
-    with arc.open_entry("story/chapter1.rpy") as stream:
-        content = stream.read().decode("utf-8")
+    # Extract only a single target file to a destination folder
+    extracted_path = arc.extract("story/chapter1.rpy", destination="./unpacked/")
+    print(f"Extracted to: {extracted_path}")
 ```
 
 #### Repacking & Creating Archives
@@ -190,6 +190,8 @@ GarEx combines native pure-Python format decoders with a universal bridge to cov
 | **800+ Commercial Engines** | *Various* | *Various* | Bridge | Nitro+, Leaf/Aquaplus, Key/VisualArt's, Innocent Grey |
 
 > 📖 **Full Catalog**: See [**`docs/ENGINE_STATUS.md`**](docs/ENGINE_STATUS.md) for game engine details and [**`docs/FORMAT_TRACKER.md`**](docs/FORMAT_TRACKER.md) for the complete list of 831 supported formats.
+> 
+> *Note: Native pure-Python formats run cross-platform on Windows, Linux, and macOS without external dependencies. Extended commercial bridge formats run on Windows (or Linux via Wine).*
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

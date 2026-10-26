@@ -18,6 +18,10 @@
 - Technical specification for NScripter SAR and NSA archive formats in `docs/formats/NSCRIPTER.md`.
 
 ### Fixed
+- Corrected Python API code snippet in `README.md` to use the working `arc.extract(...)` method instead of the non-existent `arc.open_entry(...)`.
+- Accurately distinguished cross-platform pure-Python native formats (Windows, Linux, macOS) from the Windows-only 800+ legacy commercial bridge catalog in `README.md`.
+- Added missing `[project.optional-dependencies]` dev group (`pytest`, `pytest-cov`, `pytest-asyncio`) and metadata classifiers to `pyproject.toml`, enabling `pip install -e ".[dev]"`.
+- Removed stale internal file contract comment header from `pyproject.toml`.
 - Enhanced `sanitize_entry_path` in `src/garex/security.py` to strip/replace Windows invalid filename characters (`< > : " / \ | ? *`) with `_` and truncate path components exceeding 200 characters while preserving file extensions, eliminating `OSError: [Errno 22] Invalid argument` when extracting protected or long warning entry names (e.g. 356-character warning file in KiriKiri `babel45\data.xp3`).
 - Enhanced CatSystem2 INT format parser (`src/garex/backends/native/formats/int.py`) to properly detect Frontwing Blowfish+MersenneTwister encrypted archives (`__key__.dat` signature) and raise `EncryptedArchiveError` with actionable information rather than generic corruption errors.
 - Enhanced backend router (`src/garex/backends/router.py`) to re-raise `EncryptedArchiveError` during auto-backend fallback so users are informed immediately when an archive requires an encryption key.

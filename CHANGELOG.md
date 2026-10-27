@@ -1,6 +1,9 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.0] - 2026-10-27
+### Published
+- **Official PyPI Release**: Published `garex` v0.1.0 to PyPI ([https://pypi.org/project/garex/0.1.0/](https://pypi.org/project/garex/0.1.0/)). Installable via `pip install garex`.
+
 ### Added
 - Added automated PyPI publishing workflow `.github/workflows/publish.yml` supporting PyPI Trusted Publishing (OIDC) on GitHub Releases and manual workflow dispatch.
 - Added multi-platform GitHub Actions CI workflow `.github/workflows/ci.yml` testing across Python 3.10 through 3.13 on `windows-latest` and `ubuntu-latest`.

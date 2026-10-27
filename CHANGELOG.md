@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - 2026-10-27
+### Added
+- Added `__main__.py` entrypoint allowing `python -m garex <command>` invocation directly from any terminal.
+- Added CLI invocation unit tests in `tests/unit/test_cli.py`.
+
 ## [0.1.0] - 2026-10-27
 ### Published
 - **Official PyPI Release**: Published `garex` v0.1.0 to PyPI ([https://pypi.org/project/garex/0.1.0/](https://pypi.org/project/garex/0.1.0/)). Installable via `pip install garex`.

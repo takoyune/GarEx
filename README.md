@@ -128,6 +128,10 @@ garex extract game.xp3 --entry "scripts/scene01.ks" -o ./unpacked/
 garex create patch.xp3 ./modded_files/ --format XP3
 ```
 
+> [!TIP]
+> You can also run commands with `python -m garex` (e.g., `python -m garex list game.xp3`), which works immediately on all operating systems even if Python's `Scripts/` directory is not yet added to your environment `PATH`.
+
+
 ### Python API
 
 #### Browsing and Extracting Archives
